@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		
+		<meta name="viewport" content="width-device-width,initial-scale=1.0" />
+		
+		<title>
+			Reading From, and Writing To, An Object
+		</title>
+		
+		<style type="text/css">
+			#mouseoverPara {
+				color: yellow;
+				background-color: red
+			}
+		</style>
+		
+		<script>
+			var fido = {
+				name: "Fido",
+				weight: 24,
+				breed: "Mixed",
+				loves: ["walks", "fetching balls"]
+			}
+			
+			var tomCat = {age: 5, owner: 'Philip', gender: 'M'};
+				
+			function simpleDog() {				
+				var idUsed = ["c0", "c1", "c2", "c3", "data0", "data1", "data2", "data3"];
+				
+				var j=0;				
+				
+				for ( i in fido) {
+					document.getElementById( idUsed[j] ).innerHTML = i;
+					document.getElementById( idUsed[j+4] ).innerHTML = fido[i];
+					j++;
+				}	
+				
+				dogWeight(fido);
+				
+			}
+			
+			// a function with object passed into it
+			function dogWeight(dog) {
+				if ( dog.weight >=25 ) {
+					alert("Your dog is too heavy!");
+				}
+			}
+			
+			// Read textboxes, WRITE to OBJECT, REFILL the TABLE
+			function updateDogAndCat() {
+				var k=0;
+				for ( m in fido) {
+					fido[m] = document.forms[0].elements[k].value;
+					k++;
+				}
+				
+				simpleDog();
+			}
+			
+		</script>
+	</head>
+	
+	<body onload="simpleDog()">
+		<h1>
+			Reading From, and Writing To, An Object
+		</h1>
+		
+		<table border="5">
+			<tr>
+				<td id="c0"></td>
+				<td id="c1"></td>
+				<td id="c2"></td>
+				<td id="c3"></td>
+			</tr>
+			
+			<tr>
+				<td id="data0"></td>
+				<td id="data1"></td>
+				<td id="data2"></td>
+				<td id="data3"></td>
+			</tr>
+		</table>
+		
+		<br /><br />
+		
+		<form id="dogStuff" action="">
+			New Dog Name: <input name="newName" value="" /><br />
+			New Dog Weight: <input name="newWeight" value="" /><br />
+			<label id="dogPropertyThree">New Dog Breed:</label> <input name="newBreed" value="" /><br />
+			New Dog Loves: <input name="propertyThreeValue" value="" /><br /><br /><br />
+			<input type="reset" value="Reset Textboxes and Reload Webpage" onclick="javascript:location.reload()" />
+		</form>
+		
+		<br /><br />
+		
+		<p id="mouseoverPara" onclick="updateDogAndCat()">
+			CLICK to Update Dog Record
+		</p>
+	</body>
+</html>

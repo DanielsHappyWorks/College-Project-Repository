@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		
+		<title>
+			Reading a style
+		</title>
+		
+		<!--  comments -->
+		
+		<style type="text/css">
+			div {
+				position: absolute
+			}
+			
+			#div1 {
+				top: 10px;
+				left: 10px;
+				width: 200px;
+				height: 30px;
+			}
+			
+			#div2 {
+				top: 50px;
+				left: 10px;
+				width: 100px;
+				background-color: orange
+			}
+                        .firstClass{
+                            background-color: yellow;
+                        }
+                        .secondClass{
+                            background-color: chartreuse;
+                        }
+		</style>
+		
+		<script>
+                    function changeClassObjects(){
+                        var className1 = document.getElementById("div1").className;
+                        console.log("The class name was: "+className1);
+                        
+                        document.getElementById("div1").className = "secondClass";
+                        
+                        var className2 = document.getElementById("div1").className;
+                        console.log("The class name is: "+className2);
+                    }
+		</script>
+	</head>
+	
+	<body>
+		<div id="div1" class="firstClass">
+			BOX
+		</div>
+		
+            <div id="div2" onclick="changeClassObjects()">
+			Click HERE ONCE to change the background colour by changing the classname
+		</div>
+	</body>
+</html>

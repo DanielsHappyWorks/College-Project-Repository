@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Worked example from lecture notes</title>
+        <style>
+            #canvas
+            {
+                border:1px solid black;
+                width:500px;
+                height:500px;
+            }
+
+            #loadingMessage
+            {
+                position:absolute;
+                top:100px;
+                left:100px;
+                z-index:100;
+                font-size:50px;
+            }
+        </style>
+
+        <script>
+            var CANVAS_WIDTH = 500;
+            var CANVAS_HEIGHT = 500;
+
+            var canvas;
+            var g;
+
+            window.onload = onAllAssetsLoaded;
+            document.write("<div id='loadingMessage'>Loading...</div>");
+            function onAllAssetsLoaded()
+            {
+                // hide the webpage loading message
+                document.getElementById('loadingMessage').style.visibility = "hidden";
+
+                /* associate the javascript canvas variable to the HTML canvas element  */
+                canvas = document.getElementById("canvas");
+
+                /* Assign a graphics context to the canvas, so that we can draw on it */
+                g = canvas.getContext("2d");
+
+                /* Give the canvas a width and height */
+                /* The width and height are in canvas logical units */
+                canvas.width = CANVAS_WIDTH;
+                canvas.height = CANVAS_HEIGHT;
+
+                renderCanvas();
+            }
+
+            function renderCanvas()
+            {
+                var size = 500;
+                var input = document.getElementById("input").value;
+                
+                for (i = 1; i <= parseInt(input); i++) {
+                    red = Math.floor((Math.random() * 255));
+                    blue = Math.floor((Math.random() * 255));
+                    green = Math.floor((Math.random() * 255));
+                    
+                    x = Math.floor((Math.random() * 500));
+                    y = Math.floor((Math.random() * 500));
+                    size = Math.floor((Math.random() * 250));
+
+                    g.fillStyle = "rgb(" + red + "," + green + "," + blue + ")";
+                    g.fillRect(x, y, size, size);
+                }
+            }
+        </script>
+    </head>
+
+    <body>
+        <canvas id = "canvas">
+            Your browser does not support the HTML5 'Canvas' tag.
+        </canvas>
+        <br>
+        <input id="input" type="range" min="5" max="15" value="5" step="1" onchange="renderCanvas()"/>
+    </body>
+</html>

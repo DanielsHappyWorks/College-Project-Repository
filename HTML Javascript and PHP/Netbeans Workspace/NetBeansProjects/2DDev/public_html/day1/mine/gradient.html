@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Worked example from lecture notes</title>
+<style>
+#canvas
+{
+    border:1px solid black;
+    width:500px;
+    height:500px;
+}
+
+#loadingMessage
+{
+    position:absolute;
+    top:100px;
+    left:100px;
+    z-index:100;
+    font-size:50px;
+}
+</style>
+
+<script>
+var CANVAS_WIDTH = 500;
+var CANVAS_HEIGHT = 500;
+
+var canvas;
+var g;
+
+window.onload = onAllAssetsLoaded;
+document.write("<div id='loadingMessage'>Loading...</div>");
+function onAllAssetsLoaded()
+{
+    // hide the webpage loading message
+    document.getElementById('loadingMessage').style.visibility = "hidden";
+
+    /* associate the javascript canvas variable to the HTML canvas element  */
+    canvas = document.getElementById("canvas");
+
+    /* Assign a graphics context to the canvas, so that we can draw on it */
+    g = canvas.getContext("2d");
+
+    /* Give the canvas a width and height */
+    /* The width and height are in canvas logical units */
+    canvas.width = CANVAS_WIDTH;
+    canvas.height = CANVAS_HEIGHT;
+
+    renderCanvas();
+}
+
+
+function renderCanvas()
+{
+    var red=0;
+    var blue=0;
+    var green=50;
+    
+    var x=0;
+    var y=0;
+    
+    var size=500;
+    
+    for(i=0;i<=255;i++){
+        g.fillStyle = "rgb("+red+","+green+","+blue+")";
+        g.fillRect(x, y, size, size);
+        //red = red+1;
+        blue = blue+1;
+        green = green+1;
+        x=x+1;
+        y=x;
+        size=size-2;
+    }
+
+}
+</script>
+</head>
+
+<body>
+<canvas id = "canvas">
+Your browser does not support the HTML5 'Canvas' tag.
+</canvas>
+</body>
+</html>

@@ -1,0 +1,4 @@
+﻿  Main.cpp
+c:\users\dkill\desktop\c++\wk5usingcomposition\wk5usingcomposition\engine.h(12): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  Wk5UsingComposition.vcxproj -> C:\Users\Dkill\Desktop\C++\Wk5UsingComposition\Debug\Wk5UsingComposition.exe
+  Wk5UsingComposition.vcxproj -> C:\Users\Dkill\Desktop\C++\Wk5UsingComposition\Debug\Wk5UsingComposition.pdb (Partial PDB)

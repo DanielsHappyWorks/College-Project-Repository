@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Worked example from lecture notes</title>
+<style>
+#keyboardCanvas
+{
+    border:1px solid black;
+    width:500px;
+    height:500px;
+}
+
+#loadingMessage
+{
+    position:absolute;
+    top:100px;
+    left:100px;
+    z-index:100;
+    font-size:50px;
+}
+</style>
+
+<script>
+var CANVAS_WIDTH = 500;
+var CANVAS_HEIGHT = 500;
+
+var canvas;
+var g;
+var x = 0;
+var y = 0;
+
+var img = new Image();
+var size = 100;
+img.src = "images/1.jpg";
+
+
+window.onload = onAllAssetsLoaded;
+document.write("<div id='loadingMessage'>Loading...</div>");
+function onAllAssetsLoaded()
+{
+    // hide the webpage loading message
+    document.getElementById('loadingMessage').style.visibility = "hidden";
+
+    canvas = document.getElementById("keyboardCanvas");
+    g = canvas.getContext("2d");
+    canvas.width = CANVAS_WIDTH;
+    canvas.height = CANVAS_HEIGHT;
+
+    renderCanvas();
+
+    canvas.addEventListener('mousemove', mousemoveHandler);
+    window.onmousewheel = document.onmousewheel = mousewheelHandler;
+}
+
+
+function renderCanvas()
+{
+    g.clearRect(0, 0, canvas.width, canvas.height);
+    //g.fillRect(x, y, 100, 100);
+    g.drawImage(img, x, y, size, size);
+}
+function mousemoveHandler(e)
+{
+    if (e.which === 1 && checkIfMouseOver(e.x,e.y) === true)
+    {
+        x = e.x - size/2;
+        y = e.y - size/2;
+        renderCanvas();
+    }
+}
+function checkIfMouseOver(X,Y)
+{
+    if(X<x || Y<y || X>x+size || Y>y+size){
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+function mousewheelHandler(e) 
+{
+  size += e.wheelDelta/25;  // unitChange will be equal to either +1 or -1
+  renderCanvas();
+  // code to use the unitChange value is placed below
+}  
+</script>
+</head>
+
+<body>
+<canvas id = "keyboardCanvas" tabindex="1">
+Your browser does not support the HTML5 'Canvas' tag.
+</canvas>
+<p>Click the mouse on the canvas to move the rectangle.</p>
+</body>
+</html> 

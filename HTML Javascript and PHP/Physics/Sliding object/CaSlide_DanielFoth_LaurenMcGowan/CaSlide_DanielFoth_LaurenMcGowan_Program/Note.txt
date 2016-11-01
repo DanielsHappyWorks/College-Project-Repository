@@ -1,0 +1,2 @@
+Index.html is the main page.
+You can access everything from there.

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Worked example from lecture notes</title>
+<style>
+#canvas
+{
+    border:1px solid black;
+    width:500px;
+    height:500px;
+}
+
+#loadingMessage
+{
+    position:absolute;
+    top:100px;
+    left:100px;
+    z-index:100;
+    font-size:50px;
+}
+</style>
+
+<script>
+var CANVAS_WIDTH = 500;
+var CANVAS_HEIGHT = 500;
+
+var canvas;
+var g;
+var renderCanvasInterval = null;
+
+
+window.onload = onAllAssetsLoaded;
+document.write("<div id='loadingMessage'>Loading...</div>");
+function onAllAssetsLoaded()
+{
+    // hide the webpage loading message
+    document.getElementById('loadingMessage').style.visibility = "hidden";
+
+    canvas = document.getElementById("canvas");
+    g = canvas.getContext("2d");
+    canvas.width = CANVAS_WIDTH;
+    canvas.height = CANVAS_HEIGHT;
+    setBatY(canvas.height - batHeight);
+
+    renderCanvas();
+
+    window.addEventListener('keydown', keydownHandler);
+    window.addEventListener('mousemove', mouseMoveHandler);
+    renderCanvasInterval = setInterval(renderCanvas, 10);  // game loop
+}
+
+
+function renderCanvas()
+{
+    // draw the background
+    drawBackground();
+
+    // draw the bat
+    drawBat();
+
+    // draw the bullet
+    if (bulletFiring)
+    {
+        drawBullet();
+    }
+
+    // draw the target
+    if (!targetDestroyed)
+    {
+        drawTarget();
+    }
+    else
+    {
+        alert("You win!");
+        clearInterval(renderCanvasInterval);
+    }
+}
+
+
+function keydownHandler(e)
+{
+    if (e.keyCode === 37)  // left
+    {
+        batX -= batSpeed;
+    }
+    else if (e.keyCode === 39) // right
+    {
+        batX += batSpeed;
+    }
+    else if (e.keyCode === 32) // space
+    {
+        if (bulletInterval === null)
+        {
+            bulletX = batX + batWidth / 2;
+            bulletY = batY;
+            bulletFiring = true;
+
+            bulletInterval = setInterval(moveBullet, 100 / bulletSpeed);  // animate bullet
+        }
+    }
+}
+
+function mouseMoveHandler(e){
+    if(e.which === 1){
+        if(left(e)===true){
+            batX -= batSpeed;
+        }
+        else if (right(e)===true){
+            batX += batSpeed;
+        }
+    }
+}
+function left(e){
+    if(e.x < batX+batWidth/2){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+function right(e){
+    if(e.x > batX+batWidth/2){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+/* Bullet */
+var bulletX = 0;
+var bulletY = 0;
+var bulletWidth = 10;
+var bulletHeight = 10;
+var bulletSpeed = 100;  // number in range of 1 to 100, where 100 is fastest
+var bulletColour = "red";
+function drawBullet()
+{
+    // it is good coding practice to only include draw code inside draw functions
+    // and to not include drawing code anywhere else
+    g.fillStyle = bulletColour;
+    g.fillRect(bulletX, bulletY, bulletWidth, bulletHeight);
+}
+
+
+var bulletInterval = null;
+var bulletFiring = false;
+function moveBullet()  // called by bullet timer
+{
+    bulletY--;
+    if (bulletY <= 0)
+    {
+        clearInterval(bulletInterval);  // destroy bullet timer
+        bulletInterval = null;
+        bulletFiring = false;
+    }
+    else
+    {
+        isTargetHit();
+    }
+}
+
+
+/* Bat */
+var batX = 0;
+var batY = 0;
+var batWidth = 100;
+var batHeight = 10;
+var batSpeed = 10;    // number in range of 1 to 100, where 100 is fastest
+var batColour = "black";
+function drawBat()
+{
+    // it is good coding practice to only include draw code inside draw functions
+    // and to not include drawing code anywhere else
+    g.fillStyle = batColour;
+    g.fillRect(batX, batY, batWidth, batHeight);
+}
+
+function setBatY(y)
+{
+    batY = y;
+}
+
+
+/* Target */
+var targetX = 200;
+var targetY = 0;
+var targetWidth = 100;
+var targetHeight = 10;
+var targetDestroyed = false;
+var targetColour = "green";
+function drawTarget()
+{
+    // it is good coding practice to only include draw code inside draw functions
+    // and to not include drawing code anywhere else
+    g.fillStyle = targetColour;
+    g.fillRect(targetX, targetY, targetWidth, targetHeight);
+}
+
+function isTargetHit()
+{
+    if ((bulletX >= targetX) && (bulletX <= (targetX + targetWidth))
+            && (bulletY >= targetY) && (bulletY <= (targetY + targetHeight)))
+    {
+        targetDestroyed = true;
+    }
+}
+
+function drawBackground()
+{
+    g.clearRect(0, 0, canvas.width, canvas.height);
+}
+</script>
+</head>
+
+<body>
+<canvas id = "canvas" tabindex="1">
+Your browser does not support the HTML5 'Canvas' tag.
+</canvas>
+<p>Use the left and right arrow keys to move the bat. Use the space bar to fire a bullet. </p>
+</body>
+</html> 

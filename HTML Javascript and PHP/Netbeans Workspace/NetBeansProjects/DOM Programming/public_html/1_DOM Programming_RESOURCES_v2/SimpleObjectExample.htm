@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		
+		<title>
+			Simple Object Example
+		</title>
+		
+		<style rel="stylesheet">
+		
+		</style>
+		
+		<script>
+			function fido() {
+				//alert("at start");
+				var fido = {
+					name: "Fido",
+					weight: 40,
+					breed: "Mixed",
+					loves: ["walks", "fetching balls"]
+				}
+				
+				document.getElementById("originalDog").innerHTML = fido.name + "'s details are: WEIGHT: " + fido.weight + "kilos, BREED: " + fido.breed + ", FIDO LOVES: " + fido.loves[0] + " and " + fido.loves[1] + ".";
+				
+				fido.weight = parseInt(prompt("Fido's new weight is [in kg]", "current weight is 40kg"));
+
+				document.getElementById("newDog").innerHTML = fido.name + "'s new WEIGHT is: " + fido.weight + "kilos.";
+				
+				//console.log("TEST!");
+				
+			}
+		</script>
+	</head>
+	
+	<body onload="fido()">
+		<p id="originalDog"></p>
+		<p id="newDog"></p>
+		
+		
+	</body>
+</html>

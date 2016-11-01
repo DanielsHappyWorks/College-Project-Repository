@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+<title>Worked example from lecture notes</title>
+<style>
+#canvas
+{
+    border:1px solid black;
+    width:500px;
+    height:500px;
+}
+
+#loadingMessage
+{
+    position:absolute;
+    top:100px;
+    left:100px;
+    z-index:100;
+    font-size:50px;
+}
+</style>
+
+<script>
+var CANVAS_WIDTH = 500;
+var CANVAS_HEIGHT = 500;
+
+var canvas;
+var g;
+
+var img = new Image();
+img.src = "images/1.jpg";
+
+
+window.onload = onAllAssetsLoaded;
+document.write("<div id='loadingMessage'>Loading...</div>");
+function onAllAssetsLoaded()
+{
+    // hide the webpage loading message
+    document.getElementById('loadingMessage').style.visibility = "hidden";
+
+    canvas = document.getElementById("canvas");
+    g = canvas.getContext("2d");
+    canvas.width = CANVAS_WIDTH;
+    canvas.height = CANVAS_HEIGHT;
+
+    renderCanvas();
+}
+
+
+var imageData;
+var data;
+function renderCanvas()
+{
+    g.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    // get the pixels from the canvas
+    // NOTE: getImageData() will only work if the image in drawImage is 
+    // on the same server as the webpage
+    imageData = g.getImageData(0, 0, canvas.width, canvas.height);
+    data = imageData.data;
+
+    // Manipulate the pixel data
+    for (var i = 0; i < data.length; i += 4)
+    {
+        grayscale = (data[i + 1]+data[i + 2]+data[i + 3])/3;
+        data[i + 0] = grayscale;
+        data[i + 1] = grayscale;
+        data[i + 2] = grayscale;
+        data[i + 3] = 255;
+    }
+
+    g.putImageData(imageData, 0, 0);
+    
+    g.beginPath();
+    g.font = "200px Arial";
+    g.lineWidth = 6;
+    g.fillStyle = "black";
+    g.fillText("DkIT", 43, 323);
+    g.fillStyle = "orange";
+    g.fillText("DkIT", 40, 320);
+    g.closePath();
+}
+</script>
+</head>
+
+<body>
+<canvas id = "canvas">
+Your browser does not support the HTML5 'Canvas' tag.
+</canvas>
+</body>
+</html> 

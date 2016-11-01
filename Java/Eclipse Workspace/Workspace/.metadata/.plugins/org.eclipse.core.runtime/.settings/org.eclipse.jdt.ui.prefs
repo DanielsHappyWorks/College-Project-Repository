@@ -1,0 +1,22 @@
+breadcrumb.org.eclipse.jdt.ui.JavaPerspective=true
+content_assist_disabled_computers=org.eclipse.jdt.ui.textProposalCategory\u0000org.eclipse.recommenders.calls.rcp.proposalCategory.templates\u0000org.eclipse.mylyn.java.ui.javaAllProposalCategory\u0000org.eclipse.jdt.ui.javaAllProposalCategory\u0000org.eclipse.jdt.ui.javaTypeProposalCategory\u0000org.eclipse.jdt.ui.javaNoTypeProposalCategory\u0000org.eclipse.recommenders.chain.rcp.proposalCategory.chain\u0000
+content_assist_lru_history=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><history maxLHS\="100" maxRHS\="10"><lhs name\="java.util.List"><rhs name\="java.util.ArrayList"/></lhs><lhs name\="java.util.RandomAccess"><rhs name\="java.util.ArrayList"/></lhs><lhs name\="java.lang.Cloneable"><rhs name\="java.util.ArrayList"/></lhs><lhs name\="java.util.Collection"><rhs name\="java.util.ArrayList"/></lhs><lhs name\="java.lang.Iterable"><rhs name\="java.util.ArrayList"/></lhs><lhs name\="java.util.AbstractList"><rhs name\="java.util.ArrayList"/></lhs><lhs name\="java.util.AbstractCollection"><rhs name\="java.util.ArrayList"/></lhs><lhs name\="java.util.ArrayList"><rhs name\="java.util.ArrayList"/></lhs><lhs name\="IMesurer"><rhs name\="PlayerAgeMesurer"/></lhs><lhs name\="IMeasurer"><rhs name\="characterHeightMesurer"/></lhs><lhs name\="java.lang.Enum"><rhs name\="SortType"/><rhs name\="Contract"/><rhs name\="Model.CompletionStatus"/><rhs name\="attackType"/><rhs name\="SafetyRatio"/></lhs><lhs name\="SortType"><rhs name\="SortType"/></lhs><lhs name\="Contract"><rhs name\="Contract"/></lhs><lhs name\="Model.Task"><rhs name\="Model.Task"/></lhs><lhs name\="Model.CompletionStatus"><rhs name\="Model.CompletionStatus"/></lhs><lhs name\="attackType"><rhs name\="attackType"/></lhs><lhs name\="SafetyRatio"><rhs name\="SafetyRatio"/></lhs><lhs name\="java.lang.CharSequence"><rhs name\="java.lang.String"/></lhs><lhs name\="java.lang.Exception"><rhs name\="java.io.IOException"/></lhs><lhs name\="java.lang.Throwable"><rhs name\="java.io.IOException"/></lhs><lhs name\="java.io.IOException"><rhs name\="java.io.IOException"/></lhs><lhs name\="java.io.DataOutput"><rhs name\="java.io.RandomAccessFile"/></lhs><lhs name\="java.io.DataInput"><rhs name\="java.io.RandomAccessFile"/></lhs><lhs name\="java.io.Closeable"><rhs name\="java.io.RandomAccessFile"/></lhs><lhs name\="java.lang.AutoCloseable"><rhs name\="java.io.RandomAccessFile"/></lhs><lhs name\="java.io.RandomAccessFile"><rhs name\="java.io.RandomAccessFile"/></lhs><lhs name\="Model.Show"><rhs name\="Model.Show"/></lhs><lhs name\="Model.IFilter"><rhs name\="Controller.PriceRangeFilter"/><rhs name\="Controller.ShowNameFilter"/></lhs></history>
+content_assist_number_of_computers=24
+content_assist_proposals_background=255,255,255
+content_assist_proposals_foreground=0,0,0
+eclipse.preferences.version=1
+fontPropagated=true
+org.eclipse.jdt.ui.editor.tab.width=
+org.eclipse.jdt.ui.formatterprofiles.version=12
+org.eclipse.jdt.ui.javadoclocations.migrated=true
+org.eclipse.jdt.ui.text.code_templates_migrated=true
+org.eclipse.jdt.ui.text.custom_code_templates=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><templates/>
+org.eclipse.jdt.ui.text.custom_templates=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><templates/>
+org.eclipse.jdt.ui.text.templates_migrated=true
+org.eclipse.jface.textfont=1|Comic Sans MS|11.25|0|WINDOWS|1|-15|0|0|0|400|0|0|0|0|3|2|1|66|Comic Sans MS;
+proposalOrderMigrated=true
+sourceHoverBackgroundColor=255,255,225
+spelling_locale_initialized=true
+tabWidthPropagated=true
+useAnnotationsPrefPage=true
+useQuickDiffPrefPage=true

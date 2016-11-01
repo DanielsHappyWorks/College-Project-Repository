@@ -1,0 +1,5 @@
+﻿  Main.cpp
+c:\users\dkill\desktop\c++\wk3structs\wk3structs\main.cpp(68): warning C4018: '<': signed/unsigned mismatch
+c:\users\dkill\desktop\c++\wk3structs\wk3structs\main.cpp(86): warning C4018: '<': signed/unsigned mismatch
+  Wk3Structs.vcxproj -> C:\Users\Dkill\Desktop\C++\Wk3Structs\Debug\Wk3Structs.exe
+  Wk3Structs.vcxproj -> C:\Users\Dkill\Desktop\C++\Wk3Structs\Debug\Wk3Structs.pdb (Partial PDB)

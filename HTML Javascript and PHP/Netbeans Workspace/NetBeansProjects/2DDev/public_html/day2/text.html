@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Worked example from lecture notes</title>
+<style>
+#canvas
+{
+    border:1px solid black;
+    width:500px;
+    height:500px;
+}
+
+#loadingMessage
+{
+    position:absolute;
+    top:100px;
+    left:100px;
+    z-index:100;
+    font-size:50px;
+}
+</style>
+
+<script>
+var CANVAS_WIDTH = 500;
+var CANVAS_HEIGHT = 500;
+
+var canvas;
+var g;
+
+window.onload = onAllAssetsLoaded;
+document.write("<div id='loadingMessage'>Loading...</div>");
+function onAllAssetsLoaded()
+{
+    // hide the webpage loading message
+    document.getElementById('loadingMessage').style.visibility = "hidden";
+
+    canvas = document.getElementById("canvas");
+    g = canvas.getContext("2d");
+    canvas.width = CANVAS_WIDTH;
+    canvas.height = CANVAS_WIDTH;
+
+    renderCanvas();
+}
+
+
+function renderCanvas()
+{
+    g.beginPath();
+    g.fillStyle = "red";
+    g.font = "100px Times Roman";
+    g.strokeStyle = "blue";
+    g.lineWidth = 3;
+    g.strokeText("DkIT", 151, 151);
+    g.fillText("DkIT", 150, 150);
+    g.closePath();
+
+    g.beginPath();
+    g.font = "200px Arial";
+    g.fillStyle = "red";
+    g.strokeStyle = "blue";
+    g.lineWidth = 10;
+    g.fillText("DkIT", 50, 350);
+    g.strokeText("DkIT", 50, 350);
+    g.closePath();
+}
+</script>
+</head>
+
+<body>
+<canvas id = "canvas">
+Your browser does not support the HTML5 'Canvas' tag.
+</canvas>
+</body>
+</html>

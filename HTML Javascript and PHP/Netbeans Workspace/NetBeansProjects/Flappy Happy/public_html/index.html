@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Flappy Happy</title>
+        <style>
+            #keyboardCanvas
+            {
+                border:1px solid black;
+                width:960px;
+                height:480px;
+            }
+
+            #loadingMessage
+            {
+                position:absolute;
+                top:100px;
+                left:100px;
+                z-index:100;
+                font-size:50px;
+            }
+        </style>
+
+        <script>
+            var CANVAS_WIDTH = 960;
+            var CANVAS_HEIGHT = 540;
+
+            var canvas;
+            var g;
+            var x = 0;
+            var y = 0;
+            var gravity = null;
+            var pause = true;
+            
+            var myAudio = new Audio('sounds/background.mp3');
+            myAudio.volume = 0.2;
+            myAudio.loop = true;
+            myAudio.play();
+            
+            var flapAudio = new Audio('sounds/flap.mp3');
+            flapAudio.play();
+
+            var img = new Image();
+            img.src = "images/Happy.png";
+
+            var background = new Image();
+            background.src = "images/backgroundImg.jpg";
+
+            var player = new Player(img);
+            
+            window.onload = onAllAssetsLoaded;
+            document.write("<div id='loadingMessage'>Loading...</div>");
+            function onAllAssetsLoaded()
+            {
+                // hide the webpage loading message
+                document.getElementById('loadingMessage').style.visibility = "hidden";
+
+                canvas = document.getElementById("keyboardCanvas");
+                g = canvas.getContext("2d");
+                canvas.width = CANVAS_WIDTH;
+                canvas.height = CANVAS_HEIGHT;
+                renderCanvas();
+                
+
+                canvas.addEventListener('click', clickHandler);
+            }
+
+
+            function renderCanvas()
+            {
+                requestAnimationFrame(renderCanvas);
+                g.clearRect(0, 0, canvas.width, canvas.height);
+                g.globalAlpha = 0.5;
+                g.drawImage(background, 0, 0, canvas.width, canvas.height);
+                g.globalAlpha = 1.0;
+                player.draw();
+            }
+
+
+            function clickHandler(e)
+            {
+                if(pause){
+                    pause=false;
+                    startGravity();
+                }
+                else if (e.which === 1)
+                {
+                    player.setY(player.getY() - 85);
+                    flapAudio.play();
+                }
+            }
+            
+            function startGravity()
+            {
+                if (gravity === null)
+                {
+                    gravity = setInterval(gravityInterval, 10); //starts interval for the falling objects
+                }
+            }
+            
+            function gravityInterval()
+            {
+                player.setY(player.getY() + 2);
+            }
+
+            function Player(psprite) { 
+                var sprite = new Image();
+                sprite = psprite;
+                var width = 90;
+                var height = 90;
+                var x = CANVAS_WIDTH/2;
+                var y = CANVAS_HEIGHT/2;
+                var destroyedState = false;
+
+                //objects public methods including getters and setters for values
+                this.draw = draw;
+                function draw()
+                {
+                    g.drawImage(sprite, x, y, width, height);// draws the sprite
+                }
+
+                this.isDestroyed = isDestroyed;
+                function isDestroyed()
+                {
+                    return destroyedState;
+                }
+
+                this.setX = setX;
+                function setX(newX)
+                {
+                    x = newX;
+                }
+
+                this.setY = setY;
+                function setY(newY)
+                {
+                    y = newY;
+                }
+
+                this.getX = getX;
+                function getX()
+                {
+                    return x;
+                }
+
+                this.getY = getY;
+                function getY()
+                {
+                    return y;
+                }
+
+                this.getWidth = getWidth;
+                function getWidth()
+                {
+                    return width;
+                }
+
+                this.getHeight = getHeight;
+                function getHeight()
+                {
+                    return height;
+                }
+            }
+        </script>
+    </head>
+
+    <body>
+        <canvas id = "keyboardCanvas" tabindex="1">
+            Your browser does not support the HTML5 'Canvas' tag.
+        </canvas>
+    </body>
+</html> 

@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Worked example from lecture notes</title>
+        <style>
+            #canvas
+            {
+                border:1px solid black;
+                width:500px;
+                height:500px;
+            }
+
+            #loadingMessage
+            {
+                position:absolute;
+                top:100px;
+                left:100px;
+                z-index:100;
+                font-size:50px;
+            }
+            table, th, td {
+                border: 1px solid black;
+            }
+            tr:nth-child(even) {background-color: #f2f2f2}
+
+            .textbox { 
+                border: 1px solid #c4c4c4; 
+                height: 20px; 
+                width: 150px; 
+                font-size: 13px; 
+                padding: 2px 2px 2px 2px; 
+                border-radius: 4px; 
+                -moz-border-radius: 4px; 
+                -webkit-border-radius: 4px; 
+                box-shadow: 0px 0px 8px #d9d9d9; 
+                -moz-box-shadow: 0px 0px 8px #d9d9d9; 
+                -webkit-box-shadow: 0px 0px 8px #d9d9d9; 
+            } 
+
+            .textbox:focus { 
+                outline: none; 
+                border: 1px solid #7bc1f7; 
+                box-shadow: 0px 0px 8px #7bc1f7; 
+                -moz-box-shadow: 0px 0px 8px #7bc1f7; 
+                -webkit-box-shadow: 0px 0px 8px #7bc1f7; 
+            } 
+            .button {
+                background-color: #70C4E0;
+                border: 1px solid green;
+                color: white;
+                padding: 8px 15px;
+                text-decoration: none;
+                font-size: 14px;
+                cursor: pointer;
+            }
+
+            .button:hover {
+                background-color: #4FB8DB;
+            }
+        </style>
+
+        <script>
+            var CANVAS_WIDTH = 500;
+            var CANVAS_HEIGHT = 500;
+
+            var canvas;
+            var g;
+
+            function vector(x, y, z) {
+                this.x = x;
+                this.y = y;
+                this.z = z;
+            }
+
+            //program defined
+            var iHat = new vector(1, 0, 0);
+            var jHat = new vector(0, 1, 0);
+            var kHat = new vector(0, 0, 1);
+            var count = 0;
+            var print = "";
+
+            //user input
+            var positionApproxVector;
+            var velocityApproxVector;
+            var normalHatVector;
+            var startTime;
+            var endTime;
+            var h;
+            var gravity;
+            var mass;
+            var static;
+            var kinetic;
+            var time;
+
+            //got by calculations
+            var positionVector;
+
+            var forceGravity = new vector();
+            var forceGravityNormal = new vector();
+            var dotProductOfGravityAndNormal;
+            var forceGravityPlane = new vector();
+            var forceGravityPlaneLength;
+            var velocityVector = new vector();
+
+            var forceNormal = new vector();
+            var forceNormalLength;
+
+            var downwardUnitVector = new vector();
+            var forceFriction = new vector();
+
+            var c;
+            var forceNet = new vector();
+            var frictionType;
+
+            var accelerationVector = new vector();
+
+            //arrays for points
+            var positionVectorArrayX = new Array();
+            var positionVectorArrayY = new Array();
+            var positionVectorArrayZ = new Array();
+
+            var velocityVectorArrayX = new Array();
+            var velocityVectorArrayY = new Array();
+            var velocityVectorArrayZ = new Array();
+
+            var accelerationVectorArrayX = new Array();
+            var accelerationVectorArrayY = new Array();
+            var accelerationVectorArrayZ = new Array();
+
+            var text = "";
+
+            function runProgram(x) {
+                takeInput();
+                resetData();
+                forceCalculations();
+                useMethodsToGetAndSavePoints(x);
+                makeTagsVisable();
+                renderCanvas(3);
+            }
+            function resetData() {
+                count = 0;
+                print = "";
+                text = "";
+
+                positionVectorArrayX = new Array();
+                positionVectorArrayY = new Array();
+                positionVectorArrayZ = new Array();
+
+                velocityVectorArrayX = new Array();
+                velocityVectorArrayY = new Array();
+                velocityVectorArrayZ = new Array();
+
+                accelerationVectorArrayX = new Array();
+                accelerationVectorArrayY = new Array();
+                accelerationVectorArrayZ = new Array();
+
+                document.getElementById("container").innerHTML = "";
+            }
+            function makeTagsVisable() {
+                document.body.scrollTop = document.documentElement.scrollTop = 0;
+                document.getElementById("canvas").style.display = 'block';
+                document.getElementById('downloadButton').style.display = 'block';
+                document.getElementById("button1").style.display = 'inline';
+                document.getElementById("button2").style.display = 'inline';
+                document.getElementById("button3").style.display = 'inline';
+            }
+            function download(filename) {
+                var element = document.createElement('a');
+                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+                element.setAttribute('download', filename);
+
+                element.style.display = 'none';
+                document.body.appendChild(element);
+
+                element.click();
+
+                document.body.removeChild(element);
+            }
+
+            function takeInput() {
+                var x = parseFloat(document.getElementById("initialPositionX").value);
+                var y = parseFloat(document.getElementById("initialPositionY").value);
+                var z = parseFloat(document.getElementById("initialPositionZ").value);
+                positionApproxVector = new vector(x, y, z);
+                positionVector = new vector(x, y, z);
+
+                x = parseFloat(document.getElementById("initialVelocityX").value);
+                y = parseFloat(document.getElementById("initialVelocityY").value);
+                z = parseFloat(document.getElementById("initialVelocityZ").value);
+                velocityVector = new vector(x, y, z);
+
+                x = parseFloat(document.getElementById("normalVectorX").value);
+                y = parseFloat(document.getElementById("normalVectorY").value);
+                z = parseFloat(document.getElementById("normalVectorZ").value);
+                normalHatVector = new vector(x, y, z);
+
+                startTime = parseFloat(document.getElementById("startTime").value);
+                time = startTime;
+                endTime = parseFloat(document.getElementById("endTime").value);
+
+                h = parseFloat(document.getElementById("step").value);
+
+                gravity = parseFloat(document.getElementById("gravity").value);
+
+                mass = parseFloat(document.getElementById("mass").value);
+
+                static = parseFloat(document.getElementById("static").value);
+
+                kinetic = parseFloat(document.getElementById("kinetic").value);
+            }
+
+            function forceCalculations() {
+                getActualVelocity();
+                getForceGravity();
+                getForceNormal();
+                getDownwardUnitVector();
+                getForceFrictionAndForceNet();
+                getVectorA();
+            }
+
+            function getActualVelocity() {
+                var dotProduct = velocityVector.x * normalHatVector.x + velocityVector.y * normalHatVector.y + velocityVector.z * normalHatVector.z;
+                velocityVector.x = velocityVector.x - (dotProduct * normalHatVector.x);
+                velocityVector.y = velocityVector.y - (dotProduct * normalHatVector.y);
+                velocityVector.z = velocityVector.z - (dotProduct * normalHatVector.z);
+            }
+
+            function getForceGravity() {
+                //Fg = -mg(k hat)
+                forceGravity.x = (-1) * (mass) * (gravity) * (kHat.x);
+                forceGravity.y = (-1) * (mass) * (gravity) * (kHat.y);
+                forceGravity.z = (-1) * (mass) * (gravity) * (kHat.z);
+
+                dotProductOfGravityAndNormal = forceGravity.x * normalHatVector.x + forceGravity.y * normalHatVector.y + forceGravity.z * normalHatVector.z;
+
+                forceGravityNormal.x = dotProductOfGravityAndNormal * normalHatVector.x;
+                forceGravityNormal.y = dotProductOfGravityAndNormal * normalHatVector.y;
+                forceGravityNormal.z = dotProductOfGravityAndNormal * normalHatVector.z;
+
+                forceGravityPlane.x = forceGravity.x - forceGravityNormal.x;
+                forceGravityPlane.y = forceGravity.y - forceGravityNormal.y;
+                forceGravityPlane.z = forceGravity.z - forceGravityNormal.z;
+
+                var dotProduct = forceGravityPlane.x * forceGravityPlane.x + forceGravityPlane.y * forceGravityPlane.y + forceGravityPlane.z * forceGravityPlane.z;
+                forceGravityPlaneLength = Math.sqrt(dotProduct);
+            }
+
+            function getForceNormal() {
+                forceNormal.x = -1 * forceGravityNormal.x;
+                forceNormal.y = -1 * forceGravityNormal.y;
+                forceNormal.z = -1 * forceGravityNormal.z;
+
+                var dotProduct = forceNormal.x * forceNormal.x + forceNormal.y * forceNormal.y + forceNormal.z * forceNormal.z;
+                forceNormalLength = Math.sqrt(dotProduct);
+            }
+
+            function getDownwardUnitVector() {
+                downwardUnitVector.x = (1 / forceGravityPlaneLength) * forceGravityPlane.x;
+                downwardUnitVector.y = (1 / forceGravityPlaneLength) * forceGravityPlane.y;
+                downwardUnitVector.z = (1 / forceGravityPlaneLength) * forceGravityPlane.z;
+            }
+
+            function getForceFrictionAndForceNet() {
+                //fNet = c*dHat where Vector Ff = Ff * FfHat Ff = u*Fn FfHat = -dHat
+                //c = Fgp-Ff
+                //if c>= 0 using static then kinetic 
+                c = forceGravityPlaneLength - static * forceNormalLength;
+
+
+                if (c > 0) {
+                    c = forceGravityPlaneLength - kinetic * forceNormalLength;
+
+                    forceFriction.x = -1 * (kinetic * forceNormalLength) * downwardUnitVector.x;
+                    forceFriction.y = -1 * (kinetic * forceNormalLength) * downwardUnitVector.y;
+                    forceFriction.z = -1 * (kinetic * forceNormalLength) * downwardUnitVector.z;
+
+                    forceNet.x = c * downwardUnitVector.x;
+                    forceNet.y = c * downwardUnitVector.y;
+                    forceNet.z = c * downwardUnitVector.z;
+
+                    frictionType = "Kinetic";
+                }
+                else {
+                    forceFriction.x = -1 * (kinetic * forceNormalLength) * downwardUnitVector.x;
+                    forceFriction.y = -1 * (kinetic * forceNormalLength) * downwardUnitVector.y;
+                    forceFriction.z = -1 * (kinetic * forceNormalLength) * downwardUnitVector.z;
+
+                    forceNet.x = 0;
+                    forceNet.y = 0;
+                    forceNet.z = 0;
+
+                    frictionType = "Static";
+                }
+            }
+
+            function getVectorA() {
+                accelerationVector.x = (1 / mass) * forceNet.x;
+                accelerationVector.y = (1 / mass) * forceNet.y;
+                accelerationVector.z = (1 / mass) * forceNet.z;
+            }
+
+            function useMethodsToGetAndSavePoints(x) {
+                positionVectorArrayX.push(positionVector.x);
+                positionVectorArrayY.push(positionVector.y);
+                positionVectorArrayZ.push(positionVector.z);
+
+                velocityVectorArrayX.push(velocityVector.x);
+                velocityVectorArrayY.push(velocityVector.y);
+                velocityVectorArrayZ.push(velocityVector.z);
+
+                accelerationVectorArrayX.push(accelerationVector.x);
+                accelerationVectorArrayY.push(accelerationVector.y);
+                accelerationVectorArrayZ.push(accelerationVector.z);
+
+                text += "*****DATA FOR OBJECT SLIDING DOWN A SURFACE*****\r\n";
+                text += "At time " + round(startTime) + " the position is (" + round(positionVector.x) + " , " + round(positionVector.y) + " , " + round(positionVector.z) + ")\r\n";
+                text += "The velocity is (" + round(velocityVector.x) + " , " + round(velocityVector.y) + " , " + round(velocityVector.z) + ")\r\n";
+                text += "The acceleration is (" + round(accelerationVector.x) + " , " + round(accelerationVector.y) + " , " + round(accelerationVector.z) + ")\r\n";
+                text += "The force of gravity is (" + round(forceGravity.x) + " , " + round(forceGravity.y) + " , " + round(forceGravity.z) + ")\r\n";
+                text += "The force of normal is (" + round(forceNormal.x) + " , " + round(forceNormal.y) + " , " + round(forceNormal.z) + ")\r\n";
+                text += "The force of friction is (" + round(forceFriction.x) + " , " + round(forceFriction.y) + " , " + round(forceFriction.z) + ")\r\n";
+                text += "The force net is (" + round(forceNet.x) + " , " + round(forceNet.y) + " , " + round(forceNet.z) + ")\r\n";
+                text += "\r\n\r\n";
+
+                while (startTime < endTime) {
+                    if (parseInt(x) === 1) {
+                        Eulers();
+                    }
+                    else if (parseInt(x) === 2) {
+                        RungaKutta();
+                    }
+                    forceCalculations();
+
+                    positionVectorArrayX.push(positionVector.x);
+                    positionVectorArrayY.push(positionVector.y);
+                    positionVectorArrayZ.push(positionVector.z);
+
+                    velocityVectorArrayX.push(velocityVector.x);
+                    velocityVectorArrayY.push(velocityVector.y);
+                    velocityVectorArrayZ.push(velocityVector.z);
+
+                    accelerationVectorArrayX.push(accelerationVector.x);
+                    accelerationVectorArrayY.push(accelerationVector.y);
+                    accelerationVectorArrayZ.push(accelerationVector.z);
+                    count++;
+
+                    startTime = startTime + h;
+
+                    text += "At time " + round(startTime) + " the position is (" + round(positionVector.x) + " , " + round(positionVector.y) + " , " + round(positionVector.z) + ")\r\n";
+                    text += "The velocity is (" + round(velocityVector.x) + " , " + round(velocityVector.y) + " , " + round(velocityVector.z) + ")\r\n";
+                    text += "The acceleration is (" + round(accelerationVector.x) + " , " + round(accelerationVector.y) + " , " + round(accelerationVector.z) + ")\r\n";
+                    text += "The force of gravity is (" + round(forceGravity.x) + " , " + round(forceGravity.y) + " , " + round(forceGravity.z) + ")\r\n";
+                    text += "The force of normal is (" + round(forceNormal.x) + " , " + round(forceNormal.y) + " , " + round(forceNormal.z) + ")\r\n";
+                    text += "The force of friction is (" + round(forceFriction.x) + " , " + round(forceFriction.y) + " , " + round(forceFriction.z) + ")\r\n";
+                    text += "The force net is (" + round(forceNet.x) + " , " + round(forceNet.y) + " , " + round(forceNet.z) + ")\r\n";
+                    text += "\r\n\r\n";
+                }
+
+                //print data to a table or something
+
+                print = "<table><tr><td>Position</td><td>Velocity</td><td>Acceleration</td></tr>";
+                for (i = 0; i < positionVectorArrayX.length; i++) {
+                    print += "<tr>";
+                    print += "<td>At time " + round(time) + " the position is (" + round(positionVectorArrayX[i]) + " , " + round(positionVectorArrayY[i]) + " , " + round(positionVectorArrayZ[i]) + ")</td>";
+                    print += "<td>The velocity is (" + round(velocityVectorArrayX[i]) + " , " + round(velocityVectorArrayY[i]) + " , " + round(velocityVectorArrayZ[i]) + ")</td>";
+                    print += "<td>The acceleration is (" + round(accelerationVectorArrayX[i]) + " , " + round(accelerationVectorArrayY[i]) + " , " + round(accelerationVectorArrayZ[i]) + ")</td>";
+                    print += "</tr>";
+                    time = time + h;
+                }
+
+
+                print += "</table>";
+                document.getElementById("container").innerHTML = print;
+
+            }
+
+            window.onload = onAllAssetsLoaded;
+            document.write("<div id='loadingMessage'>Loading...</div>");
+            function onAllAssetsLoaded()
+            {
+                // hide the webpage loading message
+                document.getElementById('loadingMessage').style.visibility = "hidden";
+
+                canvas = document.getElementById("canvas");
+                g = canvas.getContext("2d");
+                canvas.width = CANVAS_WIDTH;
+                canvas.height = CANVAS_HEIGHT;
+                renderCanvas();
+            }
+
+            function renderCanvas(axis)
+            {
+                g.fillStyle = "white";
+                g.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+                g.fillStyle = "red";
+                g.fillRect(0, CANVAS_HEIGHT / 2 - 1, CANVAS_HEIGHT, 3);
+                g.fillStyle = "red";
+                g.fillRect(CANVAS_WIDTH / 2 - 1, 0, 3, CANVAS_HEIGHT);
+
+                g.fillStyle = "black";
+                if (parseInt(axis) === 1) {
+                    for (i = 0; i < positionVectorArrayX.length; i++) {
+                        //multiplied by to to scale up the graph
+                        var x = (CANVAS_WIDTH / 2 + (positionVectorArrayX[i] * 10));
+                        var y = (CANVAS_HEIGHT / 2 - (positionVectorArrayY[i] * 10));
+                        //-2 is there to center the square on the point as its of size 4px
+                        g.fillRect(x - 2, y - 2, 5, 5);
+                    }
+                }
+                if (parseInt(axis) === 2) {
+                    for (i = 0; i < positionVectorArrayX.length; i++) {
+                        var y = (CANVAS_WIDTH / 2 + (positionVectorArrayY[i] * 10));
+                        var z = (CANVAS_HEIGHT / 2 - (positionVectorArrayZ[i] * 10));
+                        count += 10;
+                        g.fillRect(y - 2, z - 2, 5, 5);
+                    }
+                }
+                if (parseInt(axis) === 3) {
+                    for (i = 0; i < positionVectorArrayX.length; i++) {
+                        var x = (CANVAS_WIDTH / 2 + (positionVectorArrayX[i] * 10));
+                        var z = (CANVAS_HEIGHT / 2 - (positionVectorArrayZ[i] * 10));
+                        count += 10;
+                        g.fillRect(x - 2, z - 2, 5, 5);
+                    }
+                }
+            }
+
+            Math.degrees = function (radians)
+            {
+                return radians * 180 / Math.PI;
+            };
+            Math.radians = function (degrees)
+            {
+                return degrees * Math.PI / 180;
+            };
+            function round(value) {
+                return(Math.round(value * 10000) / 10000);
+            }
+            function roundTo1(value) {
+                return(Math.round(value * 10) / 10);
+            }
+            function Eulers() {
+                positionVector.x = positionVector.x + h * velocityVector.x;
+                positionVector.y = positionVector.y + h * velocityVector.y;
+                positionVector.z = positionVector.z + h * velocityVector.z;
+
+                velocityVector.x = velocityVector.x + h * accelerationVector.x;
+                velocityVector.y = velocityVector.y + h * accelerationVector.y;
+                velocityVector.z = velocityVector.z + h * accelerationVector.z;
+            }
+            function RungaKutta() {
+                var k1p = new vector(0, 0, 0);
+                var k1v = new vector(0, 0, 0);
+                var k2p = new vector(0, 0, 0);
+                var k2v = new vector(0, 0, 0);
+                var k3p = new vector(0, 0, 0);
+                var k3v = new vector(0, 0, 0);
+                var k4p = new vector(0, 0, 0);
+                var k4v = new vector(0, 0, 0);
+                var kp = new vector(0, 0, 0);
+                var kv = new vector(0, 0, 0);
+
+                var tempVelocityVector = new vector(velocityVector.x, velocityVector.y, velocityVector.z);
+                var tempPositionVector = new vector(positionVector.x, positionVector.y, positionVector.z);
+
+                //k1 = h * f(t,(p,v))
+                k1p.x = h * velocityVector.x;
+                k1p.y = h * velocityVector.y;
+                k1p.z = h * velocityVector.z;
+
+
+                k1v.x = h * accelerationVector.x;
+                k1v.y = h * accelerationVector.y;
+                k1v.z = h * accelerationVector.z;
+
+                //k2 = h * f(t+h/2,(p,v)+k1/2)
+                positionVector.x = tempPositionVector.x + (k1p.x / 2);
+                positionVector.y = tempPositionVector.y + (k1p.y / 2);
+                positionVector.z = tempPositionVector.z + (k1p.z / 2);
+
+                velocityVector.x = tempVelocityVector.x + (k1v.x / 2);
+                velocityVector.y = tempVelocityVector.y + (k1v.y / 2);
+                velocityVector.z = tempVelocityVector.z + (k1v.z / 2);
+
+                forceCalculations();
+
+                k2p.x = h * velocityVector.x;
+                k2p.y = h * velocityVector.y;
+                k2p.z = h * velocityVector.z;
+
+                k2v.x = h * accelerationVector.x;
+                k2v.y = h * accelerationVector.y;
+                k2v.z = h * accelerationVector.z;
+
+                //k3 = h * f(t+h/2,(p,v)+k2/2)
+                positionVector.x = tempPositionVector.x + (k2p.x / 2);
+                positionVector.y = tempPositionVector.y + (k2p.y / 2);
+                positionVector.z = tempPositionVector.z + (k2p.z / 2);
+
+                velocityVector.x = tempVelocityVector.x + (k2v.x / 2);
+                velocityVector.y = tempVelocityVector.y + (k2v.y / 2);
+                velocityVector.z = tempVelocityVector.z + (k2v.z / 2);
+
+                forceCalculations();
+
+                k3p.x = h * velocityVector.x;
+                k3p.y = h * velocityVector.y;
+                k3p.z = h * velocityVector.z;
+
+                k3v.x = h * accelerationVector.x;
+                k3v.y = h * accelerationVector.y;
+                k3v.z = h * accelerationVector.z;
+
+                //k4 = h * f(t+h,(p,v)+k3)
+                positionVector.x = tempPositionVector.x + (k3p.x);
+                positionVector.y = tempPositionVector.y + (k3p.y);
+                positionVector.z = tempPositionVector.z + (k3p.z);
+
+                velocityVector.x = tempVelocityVector.x + (k3v.x);
+                velocityVector.y = tempVelocityVector.y + (k3v.y);
+                velocityVector.z = tempVelocityVector.z + (k3v.z);
+
+                forceCalculations();
+
+                k4p.x = h * velocityVector.x;
+                k4p.y = h * velocityVector.y;
+                k4p.z = h * velocityVector.z;
+
+                k4v.x = h * accelerationVector.x;
+                k4v.y = h * accelerationVector.y;
+                k4v.z = h * accelerationVector.z;
+
+                //1/6(k1+2k2+2k3+k4)
+                kp.x = (1 / 6) * (k1p.x + 2 * k2p.x + 2 * k3p.x + k4p.x);
+                kp.y = (1 / 6) * (k1p.y + 2 * k2p.y + 2 * k3p.y + k4p.y);
+                kp.z = (1 / 6) * (k1p.z + 2 * k2p.z + 2 * k3p.z + k4p.z);
+
+                kv.x = (1 / 6) * (k1v.x + 2 * k2v.x + 2 * k3v.x + k4v.x);
+                kv.y = (1 / 6) * (k1v.y + 2 * k2v.y + 2 * k3v.y + k4v.y);
+                kv.z = (1 / 6) * (k1v.z + 2 * k2v.z + 2 * k3v.z + k4v.z);
+
+                //(p,v)1 = (p,v)0 +k
+                positionVector.x = tempPositionVector.x + (kp.x);
+                positionVector.y = tempPositionVector.y + (kp.y);
+                positionVector.z = tempPositionVector.z + (kp.z);
+
+                velocityVector.x = tempVelocityVector.x + (kv.x);
+                velocityVector.y = tempVelocityVector.y + (kv.y);
+                velocityVector.z = tempVelocityVector.z + (kv.z);
+
+            }
+        </script>
+    </head>
+
+    <body>
+    <center>
+        <canvas id = "canvas" tabindex="1" style="display: none">
+            Your browser does not support the HTML5 'Canvas' tag.
+        </canvas>
+        <button class="button" onclick="renderCanvas(1)" style="display: none" id="button1">i/x and j/y</button>
+        <button class="button" onclick="renderCanvas(2)" style="display: none" id="button2">j/y and k/z</button>
+        <button class="button" onclick="renderCanvas(3)" style="display: none" id="button3">i/x and k/z</button>
+        <br>
+        <p id="container"></p>
+        <button class="button" onclick="download('data.txt')" style="display: none" id="downloadButton">Download output to text file</button>
+        <br>
+        <button onclick="runProgram(1)" class="button">Euler's Method</button>
+        <button onclick="runProgram(2)" class="button">Runga Kutta 4</button>
+        <p>Initial Position</p>
+        X:<input type="number" id="initialPositionX" value="2" class="textbox">
+        Y:<input type="number" id="initialPositionY" value="-3" class="textbox">
+        Z:<input type="number" id="initialPositionZ" value="6" class="textbox">
+        <p>Initial Approximate Velocity</p>
+        X:<input type="number" id="initialVelocityX" value="0" class="textbox">
+        Y:<input type="number" id="initialVelocityY" value="0" class="textbox">
+        Z:<input type="number" id="initialVelocityZ" value="0" class="textbox">
+        <p>Normal Hat Vector</p>
+        X:<input type="number" id="normalVectorX" value="0.36" class="textbox">
+        Y:<input type="number" id="normalVectorY" value="0.48" class="textbox">
+        Z:<input type="number" id="normalVectorZ" value="0.8" class="textbox">
+        <p>Start Time</p>
+        <input type="number" id="startTime" value="0" class="textbox">
+        <p>End Time</p>
+        <input type="number" id="endTime" value="3" class="textbox">
+        <p>Step Size to 2 decimal places</p>
+        <input type="number" id="step" value="0.5" class="textbox">
+        <p>Object Mass</p>
+        <input type="number" id="mass" value="2.03874" class="textbox">
+        <p>Friction Coefficient Static</p>
+        <input type="number" id="static" value="0.2" class="textbox">
+        <p>Friction Coefficient Kinetic</p>
+        <input type="number" id="kinetic" value="0.1" class="textbox">
+        <p>Gravity</p>
+        <input type="number" id="gravity" value="9.81" class="textbox">      
+        <br><br>
+        <button class="button" onclick="window.location.href = './MultipleObjects.html'">Multiple Objects</button>
+        <button class="button" onclick="window.location.href = './MultiplePlanes.html'">Multiple Planes</button>
+    </center>
+</body>
+</html>                
+
+
+
+
+
+
+
+

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Accelerometer Game Example</title>
+        <style>
+            *{
+                -webkit-touch-callout: none;
+                -webkit-user-select: none; /* Disable selection/copy in UIWebView */
+            }
+
+            #canvasDiv,
+            body
+            {
+                padding:0px;
+                margin:0px;
+            }
+
+            #canvasDiv
+            {
+                position:fixed;
+                top:0px;
+                left:0px;
+                z-index:1;
+                width:100%;
+                height:100%;
+            }
+
+            #gameCanvas
+            {	
+                width:100%;
+                height:100%;
+            }
+        </style>
+
+        <!-- This is needed to access the PhoneGap JavaScript -->
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+        <script>
+            // The watch id references the current `watchAcceleration`
+            var watchID = null;
+            var canvasWidth = null;
+            var canvasHeight = null;
+            
+            var snd = new Audio("audio/fireloop.mp3")
+            var canvas;
+            var g;
+
+            var background = new Image();
+            background.src = "images/background.png";
+            var playerSprite = new Image();
+            playerSprite.src = "teddy/head.png";
+
+            var player = new Player();
+
+            var spinDegrees = 0;
+            var ANTI_CLOCKWISE = 1;
+            var CLOCKWISE = -1;
+            var STATIONARY = 0;
+            var spinDirection = ANTI_CLOCKWISE;
+
+            window.onload = onAllAssetsLoaded;
+            document.write("<div id='loadingMessage'>Loading...</div>");
+            function onAllAssetsLoaded()
+            {
+                // Wait for Cordova to connect with the device
+                document.addEventListener("deviceready", onDeviceReady, false);
+            }
+
+            // Cordova is ready to be used!
+            function onDeviceReady()
+            {
+                // hide the webpage loading message
+                document.getElementById('loadingMessage').style.visibility = "hidden";
+
+                /* set up the canvas */
+                canvas = document.getElementById("gameCanvas");
+
+                /* make sure that the canvas and the div are the same pixel resolution, */
+                /* so that mouse clicks select teh correct pixel */
+                canvasWidth = parseInt(document.getElementById('canvasDiv').offsetWidth);
+                canvasHeight = parseInt(document.getElementById('canvasDiv').offsetHeight);
+
+                /* Give the canvas a width and height */
+                /* The width and height are in canvas logical units */
+                canvas.width = canvasWidth;
+                canvas.height = canvasHeight;
+                
+                var snd = new Media("/android_asset/www/audio/background.mp3");
+                snd.play();
+                
+                /* Assign a graphics context to the canvas, so that we can draw on it */
+                g = canvas.getContext("2d");
+                /* Automatically launch the accelerometer watch when the game starts */
+                startAccelerometerWatch();
+                renderCanvas();
+            }
+
+
+            function renderCanvas()
+            {
+                requestAnimationFrame(renderCanvas);
+                g.drawImage(background, 0, 0, canvasWidth, canvasHeight);
+
+                // rotate and draw the teddy
+                g.save();
+                g.translate(player.getX(), player.getY());
+                g.rotate(Math.radians(spinDegrees));
+                g.translate(-1 * player.getX(), -1 * player.getY());
+                player.draw();
+                g.restore();
+            }
+
+
+            // Start watching the acceleration
+            function startAccelerometerWatch()
+            {
+                // Update acceleration every 20 milliseconds
+                var options = {frequency: 20};
+                watchID = navigator.accelerometer.watchAcceleration(onAccelerometerSuccess, onAccelerometerError, options);
+            }
+
+
+            function clearAccelerometerWatch()
+            {
+                navigator.accelerometer.clearWatch(watchID);
+                document.getElementById('accelerometer').innerHTML = '';
+            }
+
+
+            // Stop watching the acceleration
+            function stopWatch()
+            {
+                if (watchID)
+                {
+                    navigator.accelerometer.clearWatch(watchID);
+                    watchID = null;
+                }
+            }
+
+            var oldX;
+            var oldY;
+            function onAccelerometerSuccess(acceleration)
+            {
+                // update x and y locations
+                oldX = player.getX();
+                oldY = player.getY();
+
+                player.setX(player.getX() + (acceleration.y * 0.7));
+                player.setY(player.getY() + (acceleration.x * 0.7));
+
+                if (player.getX() < player.getRadius())
+                {
+                    player.setX(player.getRadius());
+                }
+                else if (player.getX() > canvasWidth - player.getRadius())
+                {
+                    player.setX(canvasWidth - player.getRadius());
+                }
+
+                if (player.getY() < player.getRadius())
+                {
+                    player.setY(player.getRadius());
+                }
+                else if (player.getY() > canvasHeight - player.getRadius())
+                {
+                    player.setY(canvasHeight - player.getRadius());
+                }
+
+
+                if (Math.abs(player.getX() - oldX) > Math.abs(player.getY() - oldY))
+                {
+                    if (oldX < player.getX())
+                    {
+                        if (acceleration.y < 0)
+                        {
+                            spinDirection = CLOCKWISE;
+                        }
+                        else
+                        {
+                            spinDirection = ANTI_CLOCKWISE;
+                        }
+                    }
+                    else
+                    {
+                        if (acceleration.y < 0)
+                        {
+                            spinDirection = ANTI_CLOCKWISE;
+                        }
+                        else
+                        {
+                            spinDirection = CLOCKWISE;
+                        }
+                    }
+                }
+                else if (Math.abs(player.getX() - oldX) < Math.abs(player.getY() - oldY))
+                {
+                    if (oldY < player.getY())
+                    {
+                        if (acceleration.x < 0)
+                        {
+                            spinDirection = CLOCKWISE;
+                        }
+                        else
+                        {
+                            spinDirection = ANTI_CLOCKWISE;
+                        }
+                    }
+                    else
+                    {
+                        if (acceleration.x < 0)
+                        {
+                            spinDirection = ANTI_CLOCKWISE;
+                        }
+                        else
+                        {
+                            spinDirection = CLOCKWISE;
+                        }
+                    }
+                }
+                else
+                {
+                    spinDirection = STATIONARY;
+                }
+
+                // the spin degrees amount will be dependent on how fast the teddy is moving. A faster moving teddy will spin more
+                var distance = Math.round(Math.sqrt((player.getX() - oldX) * (player.getX() - oldX) + (player.getY() - oldY) * (player.getY() - oldY)));
+                spinDegrees = spinDegrees + (distance * spinDirection * 2); // the 2 is just used to make the rotations morerealistic. Remove it and the teddy will rotate more slowly.
+            }
+
+
+            function onAccelerometerError()
+            {
+                alert('Error!');
+            }
+
+
+            Math.radians = function (degrees)
+            {
+                return degrees * Math.PI / 180;
+            };
+
+            function Player() { // creates a player object
+                //objects variables
+                var currentSprite = playerSprite;
+                var radius = 20;
+                var width = radius * 2;
+                var height = radius * 2;
+                var x = canvasWidth / 2;
+                var y = canvasHeight / 2;
+
+                //objects public methods including getters and setters for values
+                this.draw = draw;
+                function draw()
+                {
+                    g.drawImage(currentSprite, x - radius, y - radius, width, height);// draws the sprite
+                }
+
+                this.setX = setX;
+                function setX(newX)
+                {
+                    x = newX;
+                }
+
+                this.getX = getX;
+                function getX()
+                {
+                    return x;
+                }
+
+                this.setY = setY;
+                function setY(newY)
+                {
+                    y = newY;
+                }
+
+                this.getY = getY;
+                function getY()
+                {
+                    return y;
+                }
+
+                this.getRadius = getRadius;
+                function getRadius()
+                {
+                    return radius;
+                }
+                this.isHit = isHit;
+                function isHit(i)
+                {
+                    return false;
+                }
+            }
+        </script>
+    </head>
+
+    <body>
+        <div id = "canvasDiv">
+            <canvas id = "gameCanvas">
+                Your browser does not support the HTML5 canvas tag.
+            </canvas>
+        </div>
+    </body>
+</html>

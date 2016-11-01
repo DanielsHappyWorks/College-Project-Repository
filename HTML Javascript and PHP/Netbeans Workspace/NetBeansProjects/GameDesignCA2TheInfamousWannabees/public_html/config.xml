@@ -1,0 +1,68 @@
+<widget xmlns = "http://www.w3.org/ns/widgets"
+        xmlns:gap = "http://phonegap.com/ns/1.0"
+        id = "ie.dkit.derek.accelerometer_game_image"
+		version = "1.0.0">
+
+<name>Ragdoll Teddy</name>
+<description>This is a game about a bear flying through empty space to gather collectables.</description>
+<author email="derek.oreilly@dkit.ie" href="http://derek.dkit.ie">Derek O Reilly</author>
+<icon src="icon.png" />
+
+
+<platform name="android">
+    <!-- you can use any density that exists in the Android project -->
+    <splash src="icon.png" density="land-hdpi"/>
+    <splash src="icon.png" density="land-ldpi"/>
+    <splash src="icon.png" density="land-mdpi"/>
+    <splash src="icon.png" density="land-xhdpi"/>
+
+    <splash src="icon.png" density="port-hdpi"/>
+    <splash src="icon.png" density="port-ldpi"/>
+    <splash src="icon.png" density="port-mdpi"/>
+    <splash src="icon.png" density="port-xhdpi"/>
+</platform>
+
+<platform name="ios">
+    <!-- images are determined by width and height. The following are supported -->
+    <splash src="icon.png" width="320" height="480"/>
+    <splash src="icon.png" width="640" height="960"/>
+    <splash src="icon.png" width="768" height="1024"/>
+    <splash src="icon.png" width="1536" height="2048"/>
+    <splash src="icon.png" width="1024" height="768"/>
+    <splash src="icon.png" width="2048" height="1536"/>
+    <splash src="icon.png" width="640" height="1136"/>
+    <splash src="icon.png" width="750" height="1334"/>
+    <splash src="icon.png" width="1242" height="2208"/>
+    <splash src="icon.png" width="2208" height="1242"/>
+</platform>
+
+<preference name="DisallowOverscroll"      value="true" />         <!-- ios: stop overscroll/bounce -->
+<preference name="orientation"             value="landscape" />    <!-- all: default means both landscape and portrait are enabled -->
+ 
+ 
+<gap:config-file platform="ios" parent="UISupportedInterfaceOrientations" overwrite="true">
+        <array>
+            <string>UIInterfaceOrientationPortraitOmg</string>
+        </array>
+    </gap:config-file> 
+ 
+ 
+<preference name="fullscreen"              value="true" />         <!-- all: hides the status bar at the top of the screen -->
+<preference name="exit-on-suspend"         value="true" />        <!-- ios: if set to true, app will terminate when home button is pressed -->
+
+
+<gap:config-file platform="ios" parent="UIViewControllerBasedStatusBarAppearance" overwrite="true">
+    <false/>
+</gap:config-file>
+
+<!-- Core plugins -->
+<gap:plugin name="org.apache.cordova.device-motion" />
+<gap:plugin name="org.apache.cordova.vibration" />
+<gap:plugin name="org.apache.cordova.media" />
+
+<!-- Third Party plugin -->
+<gap:plugin name="nl.x-services.plugins.insomnia" />
+
+</widget>
+
+

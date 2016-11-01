@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+	
+		<title>
+			DOM example
+		</title>
+		
+		<style type="text/css">
+			#showImages img {
+				width: 200px;
+				border: 10px black solid
+			}
+			
+			.centred {
+				text-align: center
+			}
+			
+			#links a {
+				text-decoration: overline
+			}
+			
+			#links a:hover {
+				text-decoration: line-through;
+				color: white;
+				background-color: red
+			}
+		</style>
+		
+		<script type="text/javascript">
+			function collectImages() {
+				var allTags = document.getElementsByTagName( "*" );
+				alert("The number of tags is: " + allTags.length);
+				var whichTag = parseInt(prompt("Which tag do you want to see the content of?", "type a number within reason!"));
+				alert("CONTENT of TAG " + whichTag + " IS:\n\n" + allTags[whichTag-1].innerHTML +".\n\n");
+				//document.getElementById("showParticularTag").innerHTML = allTags[whichTag].innerHTML;
+				var imageArray = document.getElementsByTagName( "img" );		
+				alert("imageArray.length" + imageArray.length);
+				var hyperlinkArray = document.getElementsByTagName( "a" );		
+				alert("hyperlinkArray.length" + hyperlinkArray.length);
+
+				var imagesContents = "Images on this page:<br />| ";
+				// concatenate each link to contents for each link found in the webpage
+				for ( var j = 0; j < imageArray.length ; j++ ) {
+					var currentImage = imageArray[ j ];
+					imagesContents = imagesContents + "<img src='" + currentImage.src + "' />" + " | ";
+				} // end for
+
+				document.getElementById( "showImages" ).innerHTML = imagesContents;				
+
+				var linksContents = "Links in this page:<br />| ";
+				for ( var i = 0; i < hyperlinkArray.length ; i++ ) {
+					var currentLink = hyperlinkArray[ i ];
+					linksContents = linksContents + "<a href='" + currentLink.href + "'>" + currentLink.innerHTML + "</a>" + " |||| ";
+					// the above line can also work using the next line: TRY BOTH
+					//linksContents = linksContents + currentLink.innerHTML.link( currentLink.href ) + " | ";
+				}
+
+				document.getElementById( "links" ).innerHTML = linksContents;
+				
+				var allTags2 = document.getElementsByTagName( "*" );
+				alert("The number of tags is now: " + allTags2.length);
+			}
+		</script>
+	</head>
+	
+	<body onload="collectImages()">
+		<div style="background-color: yellow; border: solid red 10px">
+			<img src="_56160828_declaration2.jpg" /><br />
+			<img src="_56172966_potatoes464.jpg" /><br />
+			<img src="_56156981_maskedprotester_afp.jpg" /><br />
+			<img src="_56158595_013180904-1.jpg" /><br />
+		
+			<a href="http://www.rte.ie">RT&Eacute;</a> <br />
+			<a href="http://news.bbc.co.uk">BBC</a> <br /> 
+			<a href="http://www.cnn.com">CNN</a> <br /> 
+			<a href="http://english.aljazeera.net">Aljazeera</a> <br /> 
+			<a href="http://www.euronews.net">Euronews</a> <br />
+			<a href="http://www.tg4.ie">TG4</a><br />
+                        <a href="http://www.dkit.ie">DKIT</a>
+		</div>
+		
+		<hr style="background-color: red" height="80px" />
+		<h1 style="color: red" class="centred">These IMAGES and LINKS are generated dynamically using the DOM:</h1>
+		<div id="showImages" style="background-color: orange; border: dotted blue 10px" class="centred"></div>
+		<br /> <br />
+		<div id="links" style="background-color: chartreuse; border: inset brown 10px" class="centred"></div>
+		
+	</body>
+</html>

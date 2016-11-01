@@ -1,0 +1,5 @@
+
+public interface IFilter<E> 
+{
+	public boolean matches(E obj);
+}

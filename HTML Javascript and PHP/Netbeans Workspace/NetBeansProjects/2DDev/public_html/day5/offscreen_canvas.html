@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Worked example from lecture notes</title>
+<style>
+img
+{
+    width:400px;
+}
+
+#loadingMessage
+{
+    position:absolute;
+    top:100px;
+    left:100px;
+    z-index:100;
+    font-size:50px;
+}
+</style>
+
+<script>
+var canvas;
+var g;
+var width;
+var height;
+var originalImage;
+var offscreenCanvas;
+var offscreenCanvasG;
+
+
+window.onload = onAllAssetsLoaded;
+document.write("<div id='loadingMessage'>Loading...</div>");
+function onAllAssetsLoaded()
+{
+    // hide the webpage loading message
+    document.getElementById('loadingMessage').style.visibility = "hidden";
+
+    canvas = document.getElementById('screenCanvas');
+    g = canvas.getContext('2d');
+
+    originalImage = document.getElementById('originalImage');
+    width = originalImage.clientWidth;
+    height = originalImage.clientHeight;
+    canvas.width = width;
+    canvas.height = height;
+
+    offscreenCanvas = document.createElement('canvas');
+    offscreenCanvasG = offscreenCanvas.getContext('2d');
+    offscreenCanvas.width = width;
+    offscreenCanvas.height = height;
+    renderCanvas();
+}
+
+
+function renderCanvas()
+{
+    // draw onto the offscreen canvas
+    offscreenCanvasG.beginPath();
+    offscreenCanvasG.fillStyle = "red"; // any colour can be used
+    offscreenCanvasG.fillRect(70, 100, 260, 200);
+    offscreenCanvasG.closePath();
+
+    offscreenCanvasG.beginPath();
+    offscreenCanvasG.fillStyle = "yellow";
+    offscreenCanvasG.font = "50px Times Roman";
+    offscreenCanvasG.fillText("Offscreen", 100, 180);
+    offscreenCanvasG.fillText("Canvas", 125, 230);
+    offscreenCanvasG.closePath();
+
+    // draw an image directly onto the screen's canvas
+    g.drawImage(originalImage, 0, 0, width, height);
+
+    // draw the offscreen buffer onto the screen's canvas
+    g.drawImage(offscreenCanvas, 0, 0, width, height);
+}
+</script>
+</head>
+
+<body>
+<img id = 'originalImage' src = '1.jpg'>
+<canvas id = 'screenCanvas'></canvas>
+</body>
+</html> 

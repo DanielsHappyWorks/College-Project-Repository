@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Rotation Demo</title>
+
+   <script src="js/teddy.js"></script>
+    
+<style>
+#imageCanvas, #loadingMessageCanvas
+{
+   width:1600px;
+   height:900px;
+}
+#imageCanvas
+{
+   border:1px solid black;
+   position:absolute;
+   z-index: 1;    
+}
+#loadingMessageCanvas
+{
+    border:1px solid white;
+    background-color: white;
+    position:absolute;
+    z-index: 3;
+    background-image: url("head.png");
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    background-size: 30em 30em;
+
+}
+
+#loadingMessageCanvas p
+{
+    text-align: center;
+    font-size:5em;
+}
+
+#createFrameButton
+{
+    position:absolute;
+    z-index: 2;
+    bottom:2em;
+    left:2em;  
+}
+#playAnimationButton
+{
+    position:absolute;
+    z-index: 2;
+    bottom:2em;
+    left:20em;  
+}
+</style>
+
+
+</head>
+
+<body>
+    <script>
+        // initialise all of the body parts     
+var body = new Array();
+         var animation = new Animation(body);
+    function createFrame()
+    {
+        animation.createFrame();
+    }
+
+function playAnimation()
+{
+    animation.playAnimation();
+}
+    </script>
+<canvas id = "imageCanvas">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+    <div id = "loadingMessageCanvas"><p>Loading...</p><p>Please wait</p></div>
+    
+    <!-- It is possible to capture frames and to animate teddy using the code below -->
+<!--
+<div id="createFrameButton"><input type ="button" value = "Add Animaiton Frame" onclick="createFrame()"></div>
+    <div id="playAnimationButton"><input type ="button" value = "Play Animaiton" onclick="playAnimation()"></div>
+    <p>Click and drag to rotate Teddy's body parts.</p>    
+-->
+
+
+<script>
+var tv = new Image();   
+tv.src = "tv.png";
+
+var backgroundImage = new Image();   
+backgroundImage.src = "background_sun.png";
+
+var torsoImage = new Image();
+torsoImage.src = "torso.png";
+
+var headImage = new Image();
+headImage.src = "head.png";
+
+var leftArmUpperImage = new Image();
+leftArmUpperImage.src = "left_arm_upper.png";
+
+var leftArmLowerImage = new Image();
+leftArmLowerImage.src = "left_arm_lower.png";
+
+var leftArmHandImage = new Image();
+leftArmHandImage.src = "left_arm_hand.png";
+
+var rightArmUpperImage = new Image();
+rightArmUpperImage.src = "right_arm_upper.png";
+
+var rightArmLowerImage = new Image();
+rightArmLowerImage.src = "right_arm_lower.png";
+
+var rightArmHandImage = new Image();
+rightArmHandImage.src = "right_arm_hand.png";
+
+var leftLegUpperImage = new Image();
+leftLegUpperImage.src = "left_leg_upper.png";
+
+var leftLegLowerImage = new Image();
+leftLegLowerImage.src = "left_leg_lower.png";
+
+var leftLegFootImage = new Image();
+leftLegFootImage.src = "left_leg_foot.png";
+
+var rightLegUpperImage = new Image();
+rightLegUpperImage.src = "right_leg_upper.png";
+
+var rightLegLowerImage = new Image();
+rightLegLowerImage.src = "right_leg_lower.png";
+
+var rightLegFootImage = new Image();
+rightLegFootImage.src = "right_leg_foot.png";
+
+var oldMouseX = 0; // oldMouseX and oldMouseY hold the previous mouse position. This is needed to calculate the
+var oldMouseY = 0; // direction that the mouse is moving in, so that we can rotate around a body part's centre of rotation
+
+
+
+
+var mouseIsDown = false;  // set to true when the mouse is being pressed
+
+var MAX_DECENDENTS = 5; // the maximum number of child body parts for a given bodypart
+                        // In this game, the torso has 5 children: HEAD, LEFT_ARM_UPPER,
+                        // RIGHT_ARM_UPPER, LEFT_LEG_UPPER and RIGHT_LEG_UPPER
+
+// assign locations in the body array for each body part
+var HEAD = 0;
+var TORSO = 1;
+var LEFT_ARM_UPPER = 2;
+var LEFT_ARM_LOWER = 3;
+var LEFT_ARM_HAND = 4;
+var RIGHT_ARM_UPPER = 5;
+var RIGHT_ARM_LOWER = 6;
+var RIGHT_ARM_HAND = 7;
+var LEFT_LEG_UPPER = 8;
+var LEFT_LEG_LOWER = 9;
+var LEFT_LEG_FOOT = 10;   
+var RIGHT_LEG_UPPER = 11;
+var RIGHT_LEG_LOWER = 12;
+var RIGHT_LEG_FOOT = 13; 
+
+var NUMBER_OF_BODY_PARTS = 14;   
+
+// The stepsize for incrementing or decrementing thetha
+var ROTATION_STEP_SIZE = 0.01;
+
+
+
+
+
+window.onload = function()
+{    
+   /* Get the canvas id */
+   canvas = document.getElementById("imageCanvas");
+
+   /* Give the canvas a width and height */
+   /* The width and height are in canvas logical units */
+   canvas.width = canvasWidth;     
+   canvas.height = canvasHeight;
+
+   /* Assign a graphics context to the canvas, so that we can draw on it */
+   g = canvas.getContext("2d");
+
+   // set the setScreenToCanvasScaleFactors so that the canvas can be resized.
+   setScreenToCanvasScaleFactors();
+
+   /* The rest of the code draws onto the graphics context */
+   
+   canvas.addEventListener('mousemove', mouseMovedOnCanvas);
+   canvas.addEventListener('mousedown', mouseClickedOnCanvas);
+   canvas.addEventListener('mouseup', mouseUpOnCanvas);
+
+
+   // Line up the centre of the screen with the torso rotation point
+   var canvasCentreX = canvasWidth / 2;
+   var canvasCentreY = canvasHeight / 2;
+ 
+   //  BodyPart(name, sourceImage, width, height, thetha, centreOfRotationX, centreOfRotationY, hotSpotX, hotSpotY, hotSpotRadius)        
+   body[TORSO] = new BodyPart("TORSO", torsoImage, 200, 200, 0.0, 100, 150, 100, 75, 75);
+   body[HEAD] = new BodyPart("HEAD", headImage, 100, 100, 0.0, 50, 80, 50, 30, 40);
+
+   body[LEFT_ARM_UPPER] = new BodyPart("LEFT_ARM_UPPER", leftArmUpperImage, 100, 50, Math.PI / 3, 0, 25, 70, 25, 30);
+   body[LEFT_ARM_LOWER] = new BodyPart("LEFT_ARM_LOWER", leftArmLowerImage, 100, 50, Math.PI / 3, 0, 25, 70, 25, 30);
+   body[LEFT_ARM_HAND] = new BodyPart("LEFT_ARM_HAND", leftArmHandImage, 50, 50, Math.PI / 3, 5, 35, 35, 25, 30);
+        
+   body[RIGHT_ARM_UPPER] = new BodyPart("RIGHT_ARM_UPPER", rightArmUpperImage, 100, 50, Math.PI * 2.7, 0, 25, 70, 25, 30);
+   body[RIGHT_ARM_LOWER] = new BodyPart("RIGHT_ARM_LOWER", rightArmLowerImage, 100, 50, Math.PI * 2.7, 0, 25, 70, 25, 30);
+   body[RIGHT_ARM_HAND] = new BodyPart("RIGHT_ARM_HAND", rightArmHandImage, 50, 50, Math.PI * 2.7, 5, 15, 35, 15, 30);
+        
+   body[LEFT_LEG_UPPER] = new BodyPart("LEFT_LEG_UPPER", leftLegUpperImage, 100, 100, 0.0, 50, 10, 60, 50, 40);     
+   body[LEFT_LEG_LOWER] = new BodyPart("LEFT_LEG_LOWER", leftLegLowerImage, 50, 100, 0.0, 25, 10, 25, 50, 40);     
+   body[LEFT_LEG_FOOT] = new BodyPart("LEFT_LEG_FOOT", leftLegFootImage, 60, 50, 0.0, 30, 5, 30, 55, 30);  
+   
+   body[RIGHT_LEG_UPPER] = new BodyPart("RIGHT_LEG_UPPER", rightLegUpperImage, 100, 100, 0.0, 50, 10, 40, 50, 40);     
+   body[RIGHT_LEG_LOWER] = new BodyPart("RIGHT_LEG_LOWER", rightLegLowerImage, 50, 100, 0.0, 25, 10, 25, 50, 40);     
+   body[RIGHT_LEG_FOOT] = new BodyPart("RIGHT_LEG_FOOT", rightLegFootImage,  60, 50, 0.0, 30, 5, 30, 55, 30);           
+    
+   
+   
+   // set the dependencies
+   // torso is dependent on the canvas.
+   body[TORSO].setParentXandY(canvasCentreX, canvasCentreY);
+   
+   // head
+   body[TORSO].setChild(body[HEAD], 100, 10);
+   
+   // left arm
+   body[TORSO].setChild(body[LEFT_ARM_UPPER], 180, 50);
+   body[LEFT_ARM_UPPER].setChild(body[LEFT_ARM_LOWER], 80, 25);
+   body[LEFT_ARM_LOWER].setChild(body[LEFT_ARM_HAND], 100, 25);
+   
+   // right arm
+   body[TORSO].setChild(body[RIGHT_ARM_UPPER], 20, 50);
+   body[RIGHT_ARM_UPPER].setChild(body[RIGHT_ARM_LOWER], 80, 25);
+   body[RIGHT_ARM_LOWER].setChild(body[RIGHT_ARM_HAND], 100, 25);
+        
+    // left leg 
+   body[TORSO].setChild(body[LEFT_LEG_UPPER], 135, 190);  
+   body[LEFT_LEG_UPPER].setChild(body[LEFT_LEG_LOWER], 60, 90);
+   body[LEFT_LEG_LOWER].setChild(body[LEFT_LEG_FOOT], 25, 70);
+   
+   // right leg 
+   body[TORSO].setChild(body[RIGHT_LEG_UPPER], 70, 190);  
+   body[RIGHT_LEG_UPPER].setChild(body[RIGHT_LEG_LOWER], 40, 90);
+   body[RIGHT_LEG_LOWER].setChild(body[RIGHT_LEG_FOOT], 25, 70);
+   
+
+/* Below are some of the things that we can do with Teddy */
+/*  
+   // change the background image
+   backgroundImage.src = "background_seaside.png";
+*/
+ 
+/*
+   // only allow animation of the two arms
+   body[TORSO].setRotateLocked(true); 
+   body[LEFT_ARM_UPPER].setRotateLocked(false); 
+   body[RIGHT_ARM_UPPER].setRotateLocked(false); 
+*/
+
+/*  
+   // hide the two legs     
+   body[LEFT_LEG_UPPER].setIsVisible(false);   
+   body[RIGHT_LEG_UPPER].setIsVisible(false);   
+*/
+  
+/* 
+   // draw hot spots
+   for(var i = NUMBER_OF_BODY_PARTS; i >= 0; i--)
+    {
+        if(body[i] !== undefined)
+        {
+            body[i].setDrawHotSpot(true); 
+        }
+    }
+*/  
+    
+
+  
+
+/*
+   // move teddy
+   body[TORSO].setParentXandY(200, 300);
+*/   
+   
+/* Size adjustments
+   // change teddy's size by adjusting the values of canvasWidth and canvasHeight at the top of this file
+   // change the canvas size by adjusting the values of the canvas element's width and height at the top of this file
+*/
+
+
+   // hide the loading message
+   document.getElementById("loadingMessageCanvas").style.visibility = "hidden";
+   
+   // force teddy to display at the start of the game
+   mouseIsDown = true;
+
+   drawWholeBody();
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+body
+{
+    background-image:url(./images/background.jpg);
+    background-attachment: fixed;
+    background-size: cover;
+    background-color: black;
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+.container
+{
+    position: relative;
+    width: 830px;
+    margin-left: auto;
+    margin-right: auto;
+        /*Changes opacity for the background*/
+    background: rgba(90, 186, 250, 0.3);
+    /* For IE 5.5 - 7*/
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#5ABAFA00, endColorstr=#5ABAFA00);
+    /* For IE 8*/
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#5ABAFA00, endColorstr=#5ABAFA00)";
+}
+#container_home
+{
+    height: 790px;
+}
+#container_final_fantasy
+{
+    height: 1436px;
+}
+#container_kingdom_hearts
+{
+    height: 1355px;
+}
+#container_dragon_quest
+{
+    height: 1565px;
+}
+.top 
+{
+    position: relative;
+    top: 0px;
+    right: 0px;
+    width: 830px;
+    height: 310px;
+    z-index: 3;
+}
+
+.logo
+{
+    position: relative;
+    width: 200px;
+    height: 200px;
+    top: 10px;
+    left: 10px;
+    border: thin black solid;
+    
+}
+.logo_img
+{
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.banner
+{
+    position: absolute;
+    width: 600px;
+    height: 200px;
+    top: 10px;
+    left: 220px;
+    border: thin black solid;
+    background-color: white;
+}
+#home_banner
+{
+    position: relative;
+    width: 600px;
+    height: 200px;
+}
+
+.horizontal_menu
+{
+    position: relative;
+    width: 900px;
+    height: 76px;
+    top: 15px;
+    left: 0px;
+}
+.horizontal_menu ul
+{
+    list-style : none;  
+    padding    : 0px;
+    margin     :0px; 
+} 
+.horizontal_menu li
+{
+    text-decoration: none;
+    width   : 203px;
+    display : inline-block;  
+    float   : left;
+}
+.horizontal_menu img
+{   
+    padding :10px;
+    padding-bottom: 0px;
+    width: 200px;
+    height:80px;
+}
+.horizontal_menu img:hover
+{
+    padding: 0px;
+    padding-left: 10px;
+}
+.horizontal_menu ul li ul
+{    
+    position: absolute;
+    visibility : hidden;
+}
+
+.horizontal_menu ul li:hover ul
+{
+    position: relative;
+    top: -10px;
+    visibility : visible;
+}
+.horizontal_menu ul li ul
+{
+  visibility : hidden;
+}
+
+.horizontal_menu ul li ul li img
+{
+  top:-20px;
+  display: block; 
+  padding: 0px;
+  padding-left: 35px;
+  width: 150px;
+  height: 30px;
+}
+.horizontal_menu ul li ul li img:hover
+{
+  padding-left: 45px;
+}
+
+.games_menu
+{
+    padding-bottom: 0px
+}
+.middle
+{
+    position: relative;
+    top: 0px;
+    right: 0px;
+    width: 830px;
+    height: 710px;
+    z-index: 1;
+}
+.main
+{
+    position: absolute;
+    width: 810px;
+    top: 5px;
+    left: 10px;
+    color: #19389E;
+    border: thin black solid;
+    /*Changes opacity for the background*/
+    background: rgba(90, 186, 250, 0.6);
+    /* For IE 5.5 - 7*/
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#5ABAFA00, endColorstr=#5ABAFA00);
+    /* For IE 8*/
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#5ABAFA00, endColorstr=#5ABAFA00)";
+}
+#main_home
+{
+    height:400px;
+}
+#main_final_fantasy
+{
+    height: 1050px;
+}
+#main_kingdom_hearts
+{
+    height: 970px;
+}
+#main_dragon_quest
+{
+    height: 1180px;
+}
+.heading
+{
+    position: relative;
+    text-align: center;
+    top: 20px;
+
+    padding: 0px;
+    margin: 0px;
+    font-size: 20px;
+}
+.main_text
+{
+    position: relative;
+    width: 700px;
+    height: 300px;
+    top: 5px;
+    left: 65px;
+    font-size: 20px;
+    text-align: center;
+}  
+#message
+{
+    width: 400px;
+    height: 100px;
+}
+
+
+.footer
+{
+    position: absolute;
+    width: 810px;
+    height: 50px;
+    left:10px;
+    margin-left: auto;
+    margin-right: auto;
+    border: thin black solid;
+    /*Changes opacity for the background*/
+    background: rgba(90, 186, 250, 0.6);
+    /* For IE 5.5 - 7*/
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#5ABAFA00, endColorstr=#5ABAFA00);
+    /* For IE 8*/
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#5ABAFA00, endColorstr=#5ABAFA00)";
+}
+#footer_home
+{
+    top: 730px;
+}
+#footer_final_fantasy
+{
+    top: 1376px;
+}
+#footer_kingdom_hearts
+{
+    top: 1295px;
+}
+#footer_dragon_quest
+{
+    top: 1505px;
+}
+
+.facebook
+{
+    position: relative;
+    top: 13px;
+    left: 10px;
+    z-index: 2;
+}
+.copyright
+{
+    position: absolute;
+    top: 0px;
+    left: 320px;
+    font-size: 15px;
+}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		
+		<meta name="viewport" content="width-device-width,initial-scale=1.0" />
+		
+		<title>
+			CONSTRUCTOR Functions
+		</title>
+		
+		<style type="text/css">
+			#firstP {
+				color: yellow;
+				background-color: blue
+			}
+
+			#secondP {
+				color: orange;
+				background-color: green
+			}
+		</style>
+		
+		<script>
+			// Creating a CONSTRUCTOR FUNCTION (parameters are the values our objects will have)
+			//		the constructor function name is identical to the "new" Object on lines 36 and 45
+			function CD(artist, title, price) {
+				this.artist = artist;
+				this.title = title;
+				this.price = price;
+				alert(this.artist + " ; " + this.title + " ; " + this.price);
+			}
+			
+			function useConstructor() {
+				// Creating a new OBJECT (a CD)
+				var newCD1 = new CD("Ed Sheeran", "Multiply (or X)", 12.99);				
+				document.getElementById( "firstP" ).innerHTML = newCD1.artist + " ; " + newCD1.title + " ; " + newCD1.price;
+				
+				// Getting information from the user to be used to create a second CD object
+				var artist2 = prompt("Another artist");
+				var title2 = prompt("Another title");
+				var price2 = prompt("Another price");
+				
+				// Creating a SECOND CD object from user data, and converting into JSON format ... LIKE "WRITING TO JSON"
+				var newCD2 = new CD(artist2, title2, price2);
+				document.getElementById( "secondP" ).innerHTML = newCD2.artist + " ; " + newCD2.title + " ; " + newCD2.price;
+			}
+		</script>
+	</head>
+	
+	<body onload="useConstructor()">
+		<h1>
+			Using a Constructor Function to Create CD Objects
+		</h1>
+		
+		<p id="firstP">The Ed Sheeran CD Object details will go here...</p>
+
+		<p id="secondP">The other CD Object details will go here...</p>
+	</body>
+</html>

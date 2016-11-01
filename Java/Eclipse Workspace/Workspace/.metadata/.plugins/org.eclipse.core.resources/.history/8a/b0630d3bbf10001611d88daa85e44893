@@ -1,0 +1,205 @@
+package Model;
+
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
+import Utility.StringUtility;
+
+public class Show {
+	
+	public static final Show deleteRandom = new Show("dgdfsxvfhdfhsfsvsret", "mhuiydhdwgn", "fghfghyth", 46, 6757, 2343456);  
+
+	public static final int size = ((1+StringUtility.StandardPadLength)*3)+(4)+(2*2);  //strings+double+ints
+	
+	private String name;
+	private String producer;
+	private String genre;
+	private double price;
+	private int episodeCount;
+	private int duration;
+	
+	public Show(String name, String producer, String genre, double price, int episodeCount, int duration)
+	{
+		super();
+		this.name = name;
+		this.producer = producer;
+		this.genre = genre;
+		this.price = price;
+		this.episodeCount = episodeCount;
+		this.duration = duration;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	public String getProducer()
+	{
+		return producer;
+	}
+
+	public void setProducer(String producer)
+	{
+		this.producer = producer;
+	}
+
+	public String getGenre()
+	{
+		return genre;
+	}
+
+	public void setGenre(String genre)
+	{
+		this.genre = genre;
+	}
+
+	public double getPrice()
+	{
+		return price;
+	}
+
+	public void setPrice(double price)
+	{
+		this.price = price;
+	}
+
+	public int getEpisodeCount()
+	{
+		return episodeCount;
+	}
+
+	public void setEpisodeCount(int episodeCount)
+	{
+		this.episodeCount = episodeCount;
+	}
+
+	public int getDuration()
+	{
+		return duration;
+	}
+
+	public void setDuration(int duration)
+	{
+		this.duration = duration;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + duration;
+		result = prime * result + episodeCount;
+		result = prime * result + ((genre == null) ? 0 : genre.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(price);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((producer == null) ? 0 : producer.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Show other = (Show) obj;
+		if (duration != other.duration)
+			return false;
+		if (episodeCount != other.episodeCount)
+			return false;
+		if (genre == null) {
+			if (other.genre != null)
+				return false;
+		}
+		else if (!genre.equals(other.genre))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		}
+		else if (!name.equals(other.name))
+			return false;
+		if (Double.doubleToLongBits(price) != Double.doubleToLongBits(other.price))
+			return false;
+		if (producer == null) {
+			if (other.producer != null)
+				return false;
+		}
+		else if (!producer.equals(other.producer))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Show [name=" + name + ", producer=" + producer + ", genre=" + genre + ", price=" + price
+				+ ", episodeCount=" + episodeCount + ", duration=" + duration + "]";
+	}
+	
+	public static Show read(RandomAccessFile raf)
+	{
+		try
+		{
+			String name = StringUtility.unpad(raf.readUTF(), 
+										StringUtility.PadString);
+			String producer = StringUtility.unpad(raf.readUTF(), 
+					StringUtility.PadString);
+			String genre = StringUtility.unpad(raf.readUTF(), 
+					StringUtility.PadString);
+			double price = raf.readDouble();
+			int episodeCount = raf.readInt();
+			int duration = raf.readInt();
+			
+			return new Show( name,  producer,  genre,  price,  episodeCount,  duration);
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return null;		
+	}
+	
+	public static boolean write(RandomAccessFile raf, Show show)
+	{
+		try 
+		{
+			raf.writeUTF(StringUtility.pad(
+					show.getName(), 
+					StringUtility.StandardPadLength, 
+					StringUtility.PadString));
+			raf.writeUTF(StringUtility.pad(
+					show.getProducer(), 
+					StringUtility.StandardPadLength, 
+					StringUtility.PadString));
+			raf.writeUTF(StringUtility.pad(
+					show.getGenre(), 
+					StringUtility.StandardPadLength, 
+					StringUtility.PadString));
+			raf.writeDouble(show.getPrice());
+			raf.writeInt(show.getEpisodeCount());
+			raf.writeInt(show.getDuration());
+			return true;
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+			return false;
+		}
+		
+	}
+	
+}

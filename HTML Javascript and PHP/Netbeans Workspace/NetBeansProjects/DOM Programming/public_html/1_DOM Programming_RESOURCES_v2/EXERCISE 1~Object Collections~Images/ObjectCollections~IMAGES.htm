@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		
+		<title>
+		
+		</title>
+		
+		<!--  comments -->
+		
+		<style type="text/css">
+                    
+		</style>
+		
+		<script>
+                    function showImageDetails(){
+                        document.getElementById('details1').innerHTML = document.images.length;
+                        document.getElementById('details2').innerHTML = document.images[2].src;
+                        document.getElementById('details3').innerHTML = document.images["img3"].src;
+                        document.getElementById('details4').innerHTML = document.images.img3.src;
+                    }
+		</script>
+	</head>
+	
+	<body>
+		<img src="BigBang1.jpg" id="img1" width="300" />
+		<img src="BigBang2.jpg" id="img2" width="300" />
+		<img src="BigBang3.jpg" id="img3" width="300" />
+		<img src="BigBang4.jpg" id="img4" width="300" />
+		
+		<br /><br />
+
+		<div style="background-color: red" onclick="showImageDetails()">Click anywhere on the RED STRIPE to see some details of images</div>
+			
+		<table border="10">
+			<tr>
+				<td>Number of Images</td>
+				<td id="details1"></td>
+			</tr>
+				
+			<tr>
+				<td>Third image is called (1)</td>
+				<td id="details2"></td>
+			</tr>
+				
+			<tr>
+				<td>Third image is called (2)</td>
+				<td id="details3"></td>
+			</tr>
+				
+			<tr>
+				<td>Third image is called (3)</td>
+				<td id="details4"></td>
+			</tr>				
+		</table>
+		
+		<br />
+		
+		<p>
+			Note we have THREE different ways to get the SAME information from an image
+		</p>
+	</body>
+</html>

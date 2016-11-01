@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>
+            function takeData(){
+                var data = document.getElementsByTagName('input')[0].value;
+                var sData = data.toString();
+                
+                var rData ="";
+                
+                for(i=0; i<sData.length;i++){
+                    rData += sData.charAt(sData.length-1-i);
+                }
+                
+                document.getElementsByTagName('input')[1].value = rData;
+            }
+        </script>
+    </head>
+    <body>
+        <input onkeyup="takeData()">
+        <input >
+        <p>QUESTION 7: Create a website with two textboxes and a button so that when you click on the button the contents of the first textbox become the contents of the second textbox but in reverse order</p>
+    </body>
+</html>

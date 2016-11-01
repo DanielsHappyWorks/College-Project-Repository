@@ -1,0 +1,194 @@
+package View;
+
+import java.io.IOException;
+
+import Controller.ShowManager;
+import Model.MenuOptions;
+
+public class MainApp
+{
+	String strPath = "";
+	String strName = "";
+	String strPermissions = "";
+	
+	
+	private MenuOptions mainMenu, findMenu, fileMenu;
+
+	public static void main(String[] args)
+	{
+		MainApp theApp = new MainApp();
+		theApp.start();
+	}
+
+	private void start() 
+	{
+		initialiseMenus();
+		showMainMenu();
+	}
+
+	private void showMainMenu()
+	{
+		/* initialising choice */
+		int choice = 0;
+
+		do {
+			choice = this.mainMenu.showMenuGetChoice("Enter your choice: ");
+
+			
+			 if (choice == 1) {
+				 //ShowManager manager = new ShowManager(strPath, strName, strPermissions);
+			}
+			 else if (choice == 2) {
+					exit();
+				}
+			else if (choice == 3) {
+				showFileMenu();
+			}
+		     else if (choice == 4) {
+				deleteFile();
+			}
+			else if (choice == 5) {
+				exit();
+			}
+
+		
+
+		}
+		while (choice != this.mainMenu.getIndexOfExitOption());
+
+	}
+
+
+	private void initialiseMenus()
+	{
+		// main menu
+		this.mainMenu = new MenuOptions("Main Menu", 4);
+		this.mainMenu.add("Create");
+		this.mainMenu.add("Open");
+		this.mainMenu.add("Delete");
+		this.mainMenu.add("Exit");
+
+		// file menu
+		this.fileMenu = new MenuOptions("File Menu", 9);
+		this.fileMenu.add("Add");
+		this.findMenu.add("Edit");
+		this.findMenu.add("Find menu");
+		this.findMenu.add("Delete");
+		this.fileMenu.add("Delete All");
+		this.findMenu.add("Print All");
+		this.findMenu.add("Count");
+		this.findMenu.add("Show Main menu");
+		this.findMenu.add("Exit");
+
+		// find menu
+		this.findMenu = new MenuOptions("Find Menu", 5);
+		this.findMenu.add("Find by name");
+		this.findMenu.add("Find by genre");
+		this.findMenu.add("Find by price");
+		this.findMenu.add("Show Main menu");
+		this.findMenu.add("Exit");
+
+	}
+
+	private void showFindMenu()
+	{
+
+		int choice = 0;
+
+		do {
+			choice = this.findMenu.showMenuGetChoice("Enter your choice: ");
+
+			if (choice == 1) {
+
+			}
+			else if (choice == 2) {
+
+			}
+			else if (choice == 3) {
+
+			}
+			else if (choice == 4) {
+				showMainMenu();
+			}
+			else if (choice == 5) {
+				exit();
+			}
+
+		}
+		while (choice != this.mainMenu.getIndexOfExitOption());
+
+	}
+	
+	
+	private void showFileMenu()
+	{
+			int choice = 0;
+
+			do {
+				choice = this.fileMenu.showMenuGetChoice("Enter your choice: ");
+
+				if (choice == 1) {
+
+				}
+				else if (choice == 2) {
+
+				}
+				else if (choice == 3) {
+					showFindMenu();
+				}
+				else if (choice == 4) {
+
+				}
+
+				else if (choice == 5) {
+					
+				}
+				else if (choice == 6) {
+				
+				}
+				
+				else if (choice == 7) {
+					
+				}
+				
+				else if (choice == 8) {
+					showMainMenu();
+				}
+				
+				else if (choice == 9) {
+					exit();
+				}
+
+			}
+			while (choice != this.mainMenu.getIndexOfExitOption());
+
+		}
+
+	private void deleteFile()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+	private void deleteAll()
+	{
+
+	}
+
+	private void exit()
+	{
+
+		System.out.println("GoodBye");
+		System.exit(0);
+	}
+
+}
+
+
+
+
+
+
+
+

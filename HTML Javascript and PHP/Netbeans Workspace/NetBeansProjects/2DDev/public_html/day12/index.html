@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accelerometer Game Example</title>
+<style>
+*{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none; /* Disable selection/copy in UIWebView */
+}
+
+#canvasDiv,
+body
+{
+    padding:0px;
+    margin:0px;
+}
+
+#canvasDiv
+{
+    position:fixed;
+    top:0px;
+    left:0px;
+    z-index:1;
+    width:100%;
+    height:100%;
+}
+
+#gameCanvas
+{	
+    width:100%;
+    height:100%;
+}
+</style>
+
+<!-- This is needed to access the PhoneGap JavaScript -->
+<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+<script>
+// The watch id references the current `watchAcceleration`
+var watchID = null;
+var canvasWidth = null;
+var canvasHeight = null;
+var x = 0;
+var y = 0;
+var radius = 20;
+
+var canvas;
+var g;
+
+var pitch = new Image();
+pitch.src = "pitch.png";
+var ball = new Image();
+ball.src = "ball.png";
+
+var spinDegrees = 0;
+var ANTI_CLOCKWISE = 1;
+var CLOCKWISE = -1;
+var STATIONARY = 0;
+var spinDirection = ANTI_CLOCKWISE;
+ 
+window.onload = onAllAssetsLoaded;
+document.write("<div id='loadingMessage'>Loading...</div>");
+function onAllAssetsLoaded()
+{
+    // Wait for Cordova to connect with the device
+    document.addEventListener("deviceready", onDeviceReady, false);
+}
+
+// Cordova is ready to be used!
+function onDeviceReady()
+{
+    // hide the webpage loading message
+    document.getElementById('loadingMessage').style.visibility = "hidden";
+
+    /* set up the canvas */
+    canvas = document.getElementById("gameCanvas");
+
+    /* make sure that the canvas and the div are the same pixel resolution, */
+    /* so that mouse clicks select teh correct pixel */
+    canvasWidth = parseInt(document.getElementById('canvasDiv').offsetWidth);
+    canvasHeight = parseInt(document.getElementById('canvasDiv').offsetHeight);
+
+    /* Give the canvas a width and height */
+    /* The width and height are in canvas logical units */
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+
+    /* set the initial postion of the ball to be at the centre of the screen */
+    x = canvasWidth / 2;
+    y = canvasHeight / 2;
+
+    /* Assign a graphics context to the canvas, so that we can draw on it */
+    g = canvas.getContext("2d");
+
+    /* Automatically launch the accelerometer watch when the game starts */
+    startAccelerometerWatch();
+}
+
+
+function renderCanvas()
+{
+    g.drawImage(pitch, 0, 0, canvasWidth, canvasHeight);
+	
+	// rotate and draw the ball
+	g.save();
+	g.translate(x, y);
+    g.rotate(Math.radians(spinDegrees));
+    g.translate(-x, -y);
+	spinDegrees
+    g.drawImage(ball, x - radius, y - radius, radius * 2, radius * 2);
+	g.restore();
+}
+
+
+// Start watching the acceleration
+function startAccelerometerWatch()
+{
+    // Update acceleration every 20 milliseconds
+    var options = {frequency: 20};
+    watchID = navigator.accelerometer.watchAcceleration(onAccelerometerSuccess, onAccelerometerError, options);
+}
+
+
+function clearAccelerometerWatch()
+{
+    navigator.accelerometer.clearWatch(watchID);
+    document.getElementById('accelerometer').innerHTML = '';
+}
+
+
+// Stop watching the acceleration
+function stopWatch()
+{
+    if (watchID)
+    {
+        navigator.accelerometer.clearWatch(watchID);
+        watchID = null;
+    }
+}
+
+var oldX;
+var oldY;
+function onAccelerometerSuccess(acceleration)
+{
+    // update x and y locations
+	oldX = x;
+	oldY = y;
+    x += -1 * (acceleration.x);
+    y += (acceleration.y);
+
+    if (x < radius)
+    {
+        x = radius;
+    }
+    else if (x > canvasWidth - radius)
+    {
+        x = canvasWidth - radius;
+    }
+
+    if (y < radius)
+    {
+        y = radius;
+    }
+    else if (y > canvasHeight - radius)
+    {
+        y = canvasHeight - radius;
+    }
+
+    if(Math.abs(x - oldX) > Math.abs(y - oldY))
+	{
+		if(oldX < x)
+		{
+			if(acceleration.y < 0)
+			{
+			   spinDirection = CLOCKWISE;
+			}
+			else
+			{
+				spinDirection = ANTI_CLOCKWISE;
+			}
+		}
+		else
+		{			
+		    if(acceleration.y < 0)
+			{
+			   spinDirection = ANTI_CLOCKWISE;
+			}
+			else
+			{
+				spinDirection = CLOCKWISE;
+			}
+		}
+	}
+	else if(Math.abs(x - oldX) < Math.abs(y - oldY))
+	{
+		if(oldY < y)
+		{
+			if(acceleration.x < 0)
+			{
+			   spinDirection = CLOCKWISE;
+			}
+			else
+			{
+				spinDirection = ANTI_CLOCKWISE;
+			}
+		}
+		else
+		{			
+		    if(acceleration.x < 0)
+			{
+			   spinDirection = ANTI_CLOCKWISE;
+			}
+			else
+			{
+				spinDirection = CLOCKWISE;
+			}
+		}
+	}
+	else
+	{
+		spinDirection = STATIONARY;
+	}
+
+    // the spin degrees amount will be dependent on how fast the ball is moving. A faster moving ball will spin more
+    var distance = Math.round(Math.sqrt((x - oldX) * (x - oldX) + (y - oldY) * (y - oldY)));
+    spinDegrees = spinDegrees + (distance * spinDirection * 2); // the 2 is just used to make the rotations morerealistic. Remove it and the ball will rotate more slowly.
+	
+    renderCanvas();
+}
+
+
+function onAccelerometerError()
+{
+    alert('Error!');
+}
+
+
+Math.radians = function(degrees) 
+{
+  return degrees * Math.PI / 180;
+};
+</script>
+</head>
+
+<body>
+<div id = "canvasDiv">
+<canvas id = "gameCanvas">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+</div>
+</body>
+</html>

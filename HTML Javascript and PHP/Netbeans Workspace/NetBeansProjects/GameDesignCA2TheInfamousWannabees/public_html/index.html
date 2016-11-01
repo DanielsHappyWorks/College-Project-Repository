@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Ragdoll Teddy</title>
+        <style>
+            *{
+                -webkit-touch-callout: none;
+                -webkit-user-select: none; /* Disable selection/copy in UIWebView */
+            }
+
+            #canvasDiv,
+            body
+            {
+                padding:0px;
+                margin:0px;
+            }
+
+            #canvasDiv
+            {
+                position:fixed;
+                top:0px;
+                left:0px;
+                z-index:1;
+                width:100%;
+                height:100%;
+            }
+
+            #gameCanvas
+            {	
+                width:100%;
+                height:100%;
+            }
+        </style>
+
+        <!-- This is needed to access the PhoneGap JavaScript -->
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+        <!-- Prevent Screen Sleep -->
+        <script type="text/javascript" src="../../../rich_web_applications/phonegap/example_code/third_party_plugins_prevent_screen_sleep_example/js/plugins/Insomnia.js"></script>
+        <script src="./JavaScript/Player.js"></script>
+        <script src="./JavaScript/Enemy.js"></script>
+        <script src="./JavaScript/Collectable.js"></script>
+        <script>
+            // The watch id references the current `watchAcceleration`
+            var watchID = null;
+            var canvasWidth = null;
+            var canvasHeight = null;
+
+            var canvas;
+            var g;
+            
+            //menu variables
+            var menu = true, mainMenu = true;
+            var winMenu, looseMenu, levelMenu;
+            //menu images
+            var menuMenuImg = new Image();
+            menuMenuImg.src = "./images/menu/menu.png";
+            var winMenuImg = new Image();
+            winMenuImg.src = "./images/menu/win.png";
+            var looseMenuImg = new Image();
+            looseMenuImg.src = "./images/menu/gameOver.png";
+
+            var background = new Image();
+            background.src = "./images/background.png";
+            
+            var playerSprite = new Image();
+            playerSprite.src = "./teddy/head.png";
+            var player = new Player(playerSprite,canvasWidth,canvasHeight,g);
+            
+            window.onload = onAllAssetsLoaded;
+            document.write("<div id='loadingMessage'>Loading...</div>");
+            function onAllAssetsLoaded()
+            {
+                // Wait for Cordova to connect with the device
+                document.addEventListener("deviceready", onDeviceReady, false);
+            }
+
+            // Cordova is ready to be used!
+            function onDeviceReady()
+            {
+                /*Keeps screen awake*/
+                window.plugins.insomnia.keepAwake();
+
+                // hide the webpage loading message
+                document.getElementById('loadingMessage').style.visibility = "hidden";
+
+                /* set up the canvas */
+                canvas = document.getElementById("gameCanvas");
+
+                /* make sure that the canvas and the div are the same pixel resolution, */
+                /* so that mouse clicks select teh correct pixel */
+                canvasWidth = parseInt(document.getElementById('canvasDiv').offsetWidth);
+                canvasHeight = parseInt(document.getElementById('canvasDiv').offsetHeight);
+
+                /* handlers */
+                document.getElementById('canvas').addEventListener("touchstart", handleTouchStartEvent, false);
+                document.getElementById('canvas').addEventListener("touchend", handleTouchEndEvent, false);
+                document.getElementById('canvas').addEventListener("touchmove", handleTouchMoveEvent, false);
+
+                /* Give the canvas a width and height */
+                /* The width and height are in canvas logical units */
+                canvas.width = canvasWidth;
+                canvas.height = canvasHeight;
+
+                /* Assign a graphics context to the canvas, so that we can draw on it */
+                g = canvas.getContext("2d");
+
+                /* Automatically launch the accelerometer watch when the game starts */
+                startAccelerometerWatch();
+            }
+
+            function renderCanvas()
+            {
+                /*if (menu) { // draws the menu if said menu is set to true
+                    if (mainMenu) {
+                        g.drawImage(menuMenuImg, 0, 0, canvasWidth, canvasHeight);
+                    }
+                    else if (levelMenu) {
+                        //g.drawImage(levelArray[currentLevel].getLevelMenu(), 0, 0, canvasWidth, canvasHeight);
+                    }
+                    else if (winMenu) {
+                        g.drawImage(winMenuImg, 0, 0, canvasWidth, canvasHeight);
+                    }
+                    else if (looseMenu) {
+                        g.drawImage(looseMenuImg, 0, 0, canvasWidth, canvasHeight);
+                    }
+                }
+                else { // plays the game*/
+                    // renders the canvas repeatedly
+                    requestAnimationFrame(renderCanvas);
+                    // Draws background on the canvas 
+                    g.drawImage(background, 0, 0, canvasWidth, canvasHeight);
+                    player.draw();
+                //}
+
+            }
+
+            function handleTouchStartEvent(e) {
+
+            }
+
+            function handleTouchMoveEvent(e) {
+
+            }
+
+            function handleTouchEndEvent(e) {
+
+            }
+
+            // Start watching the acceleration
+            function startAccelerometerWatch()
+            {
+                // Update acceleration every 20 milliseconds
+                var options = {frequency: 20};
+                watchID = navigator.accelerometer.watchAcceleration(onAccelerometerSuccess, onAccelerometerError, options);
+            }
+
+
+            function clearAccelerometerWatch()
+            {
+                navigator.accelerometer.clearWatch(watchID);
+                document.getElementById('accelerometer').innerHTML = '';
+            }
+
+
+            // Stop watching the acceleration
+            function stopWatch()
+            {
+                if (watchID)
+                {
+                    navigator.accelerometer.clearWatch(watchID);
+                    watchID = null;
+                }
+            }
+
+            function onAccelerometerSuccess(acceleration)
+            {
+                // update x and y locations
+                player.x += -1 * (acceleration.x);
+                player.y += (acceleration.y);
+
+                //renderCanvas();
+            }
+
+            function onAccelerometerError()
+            {
+                alert('Error!');
+            }
+
+            function vibrate()
+            {
+                navigator.notification.vibrate(1000);  // 1 second
+            }
+        </script>
+    </head>
+
+    <body>
+        <div id = "canvasDiv">
+            <canvas id = "gameCanvas">
+                Your browser does not support the HTML5 canvas tag.
+            </canvas>
+        </div>
+    </body>
+</html>

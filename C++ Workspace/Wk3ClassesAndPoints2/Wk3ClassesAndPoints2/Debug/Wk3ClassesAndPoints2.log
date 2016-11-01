@@ -1,0 +1,4 @@
+﻿  Main.cpp
+c:\users\dkill\desktop\c++\wk3classesandpoints2\wk3classesandpoints2\main.cpp(89): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
+  Wk3ClassesAndPoints2.vcxproj -> C:\Users\Dkill\Desktop\C++\Wk3ClassesAndPoints2\Debug\Wk3ClassesAndPoints2.exe
+  Wk3ClassesAndPoints2.vcxproj -> C:\Users\Dkill\Desktop\C++\Wk3ClassesAndPoints2\Debug\Wk3ClassesAndPoints2.pdb (Partial PDB)

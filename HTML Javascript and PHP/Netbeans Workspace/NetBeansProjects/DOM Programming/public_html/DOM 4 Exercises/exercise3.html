@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <style>
+            .class1 {
+                color: red;
+            }
+            .class2 {
+                color: blue;
+            }
+        </style>
+        
+        <script>
+            function changeStyle(){
+                var h1 = document.getElementsByTagName('h1');
+                var h2 = document.getElementsByTagName('h2');
+                var p = document.getElementsByTagName('p');
+                
+                if(h1[0].className === 'class2'){
+                    h1[0].className = 'class1';
+                    h1[1].className = 'class2';
+                    h2[0].className = 'class1';
+                    h2[1].className = 'class2';
+                    p[0].className = 'class1';
+                    p[1].className = 'class2';
+                }
+                else{
+                    h1[1].className = 'class1';
+                    h1[0].className = 'class2';
+                    h2[1].className = 'class1';
+                    h2[0].className = 'class2';
+                    p[1].className = 'class1';
+                    p[0].className = 'class2';
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <h1>Hello</h1>
+        <h1>World</h1>
+        <h2>Hello</h2>
+        <h2>World</h2>
+        <p>Hello</p>
+        <p>World</p>
+        
+        <button onclick="changeStyle()">change color</button>
+        
+        <p>Create a website with a button, 2 <.p>, 2 <.h1> and 2 <.h2> tags. Apply 2 different classes to these tags so that 3 tags (1p 1h1 1h2) have the same class and the other three tags use the other class. Insert different styles into each class. When the user clicks on a button, the styles should become reversed.</p>
+    </body>
+</html>

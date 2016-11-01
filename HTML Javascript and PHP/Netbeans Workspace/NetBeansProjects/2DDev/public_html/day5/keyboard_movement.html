@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Worked example from lecture notes</title>
+        <style>
+            #keyboardCanvas
+            {
+                border:1px solid black;
+                width:500px;
+                height:500px;
+            }
+
+            #loadingMessage
+            {
+                position:absolute;
+                top:100px;
+                left:100px;
+                z-index:100;
+                font-size:50px;
+            }
+        </style>
+
+        <script>
+            var CANVAS_WIDTH = 500;
+            var CANVAS_HEIGHT = 500;
+
+            var canvas;
+            var g;
+            var x = 0;
+            var y = 0;
+
+            var img = new Image();
+            img.src = "1.jpg";
+
+
+            window.onload = onAllAssetsLoaded;
+            document.write("<div id='loadingMessage'>Loading...</div>");
+            function onAllAssetsLoaded()
+            {
+                // hide the webpage loading message
+                document.getElementById('loadingMessage').style.visibility = "hidden";
+
+                canvas = document.getElementById("keyboardCanvas");
+                g = canvas.getContext("2d");
+                canvas.width = CANVAS_WIDTH;
+                canvas.height = CANVAS_HEIGHT;
+
+                renderCanvas();
+
+                document.addEventListener('keydown', keydownHandler);
+            }
+
+
+            function renderCanvas()
+            {
+                g.clearRect(0, 0, canvas.width, canvas.height);
+                g.drawImage(img, x, y, 100, 100);
+            }
+
+
+            function keydownHandler(e)
+            {
+                var stepSize = 10;
+                if (e.keyCode === 37)  // left
+                {
+                    if (x >= 0+stepSize) {
+                        x -= stepSize;
+                    }
+                }
+                else if (e.keyCode === 38) // up
+                {
+                    if (y >= 0+stepSize) {
+                        y -= stepSize;
+                    }
+                }
+                else if (e.keyCode === 39) // right
+                {
+                    if (x + 100+stepSize <= canvas.width) {
+                        x += stepSize;
+                    }
+                }
+                else if (e.keyCode === 40) // down
+                {
+                    if (y + 100+stepSize <= canvas.height) {
+                        y += stepSize;
+                    }
+                }
+
+                renderCanvas();
+            }
+        </script>
+    </head>
+    <body>
+        <canvas id = "keyboardCanvas" tabindex="1">
+            Your browser does not support the HTML5 'Canvas' tag.
+        </canvas>
+        <p>Use the four arrow keys to move the rectangle.</p>
+    </body>
+</html> 

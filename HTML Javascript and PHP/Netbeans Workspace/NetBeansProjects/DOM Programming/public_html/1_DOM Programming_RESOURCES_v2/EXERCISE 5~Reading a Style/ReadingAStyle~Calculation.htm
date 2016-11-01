@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		
+		<title>
+			Reading a style
+		</title>
+		
+		<!--  comments -->
+		
+		<style type="text/css">
+			div {
+				position: absolute
+			}
+			
+			#div1 {
+				top: 10px;
+				left: 10px;
+				height: 70px;
+				background-color: chartreuse
+			}
+			
+			#div2 {
+				top: 10px;
+				left: 500px;
+				height: 60px;
+				background-color: yellow
+			}
+			
+			#div3 {
+				top: 100px;
+				left: 100px;
+				background-color: orange
+			}
+			
+			#div4 {
+				top: 200px;
+				left: 200px;
+				background-color: lightblue;
+				width: 20px;
+				height: 20px;
+				border: 5px red solid;
+			}
+			
+			.swapBox {
+				color: red;
+				font-size: 24px
+			}
+			
+		</style>
+		
+	</head>
+	
+	<body>
+		<div id="div1" class="swapBox">FIRST BOX</div>
+		<div id="div2" class="swapBox">SECOND BOX</div>
+                <div id="div3" onclick="addBoxWidths()">(FIREFOX: have FIREBUG(Console) OPEN).<br /> ORIGINAL WIDTH OF ABOVE DIVS DEPENDS ON AMOUNT OF TEXT.<br /><br />Click HERE to CHANGE the widths of the other 3 DIVs</div>
+		<div id="div4">X</div>
+                
+                <script>
+                    function addBoxWidths(){
+                        document.getElementById("div1").style.width = "300px";
+                        document.getElementById("div2").style.width = "100px";
+                        
+                        var width1 = document.getElementById("div1").style.width;
+                        console.log("This is the first width: " + width1);
+                        var width2 = document.getElementById("div1").style.width;
+                        console.log("This is the second width: " + width2);
+                        
+                        var sum1 = width1 + width2;
+                        console.log("Incorrect sum: " + sum1);
+                        
+                        var sum2 = parseInt(width1) + parseInt(width2);
+                        console.log("Correct sum: " + sum2);
+                        
+                        document.getElementById("div4").style.width = parseInt(sum2/2)+"px";
+                        document.getElementById("div4").style.height = parseInt(sum2/1.5)+"px";
+                    }
+                </script>
+	</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		
+		<title>
+			Writing a style
+		</title>
+		
+		<!--  comments -->
+		
+		<style type="text/css">
+			
+		</style>
+		
+		<script>
+                    function writeStyle(){
+                        document.getElementsByTagName( 'h1' )[0].style.fontSize = '60px';
+                    }
+		</script>
+	</head>
+	
+	<body>
+		<h1>This heading will get bigger if you click on the green bar BELOW</h1>
+		
+                <div style="background-color: chartreuse" onclick="writeStyle()">
+			Click HERE to make the first line bigger
+		</div>
+		
+		<h1>This heading will NOT get bigger if you click on the green bar ABOVE</h1>
+	</body>
+</html>

@@ -1,0 +1,180 @@
+html {
+    background-image:url(../images/background.jpg);
+    background-attachment: fixed;
+    background-size: cover;
+    background-color: lightblue;
+    background-repeat: no-repeat;
+}
+body {
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+    width: 800px;
+    margin: 0 auto;
+    padding: 0 2em;
+    background: rgba(236, 245, 228, 0.3);
+    border: 1px solid blue;
+}
+header {
+    padding: .5em 0;
+    border-bottom: 2px solid blue;
+}
+#nav {
+    padding: .3em 0;
+    border-bottom: 2px solid blue;
+}
+#nav ul
+{
+    list-style : none;
+    background: rgba(236, 245, 228, 0.5);
+    padding: 0px;
+} 
+#nav li
+{
+    text-decoration: none;
+    display : inline-block;  
+    font-size: 28px;
+    padding-top: 21px;
+}
+#nav li a
+{
+    text-decoration: none;
+    color: blue;
+    padding: 21px;
+
+}
+#nav ul li:hover a
+{
+    color: orange;
+    background: rgba(236, 245, 228, 0.2);
+}
+#banner{
+    position: relative;
+    width: 800px;
+    height: 200px;
+
+}
+header h1 {
+    font-size: 50px;
+    color: blue;
+    position: relative;
+    top: -140px;
+
+}
+aside {
+    float: left;
+    width: 150px;
+}
+section {
+    float: left;
+    width: 500px;
+}
+footer {
+    clear: both;
+    border-top: 2px solid blue;
+}
+footer p {
+    text-align: right;
+    font-size: 80%;
+}
+h1 {
+    font-size: 150%;
+    margin: .5em 0;
+}
+h2 {
+    font-size: 120%;
+    margin: .25em 0 .5em;
+}
+h1, h2 {
+    color: orange;
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding-left: 0;
+    padding-bottom: 1em;
+}
+li {
+    padding-bottom: 0.5em;
+}
+a {
+    color: rgb(41, 64, 124);
+    font-weight: bold;
+}
+a:hover {
+    color: rgb(208, 133, 4);
+}
+br {
+    clear: left;
+}
+table {
+    border: 1px solid blue;
+    border-collapse: collapse;
+    margin-bottom: 1em;
+}
+td, th {
+    border: 1px dashed blue;
+    padding: .2em .5em .2em .5em;
+    text-align: left;
+}
+form {
+
+}
+/* the styles for classes */
+.right {
+    text-align: right;
+}
+.first_paragraph {
+    margin-top: 0;	
+}
+.last_paragraph {
+    margin-bottom: 2em;	
+}
+/* the styles for the div tags that divide the page into sections */
+#left_column {
+    float: left;
+    width: 150px;
+    text-align: center;
+}
+#right_column {
+    float: left;
+    padding-left: 1em;
+    padding-bottom: 2em;
+}
+/* Additional styles for the Product Manager application */
+#add_product_form {
+    margin: .5em 0;
+}
+#add_product_form label {
+    width: 6em;
+    padding-right: 1em;
+    padding-bottom: .5em;
+    float: left;
+}
+#add_product_form input {
+    float: left;
+}
+#add_product_form input[text] {
+    width: 15em;
+}
+input {
+    border: 1px solid black;
+    border-radius: 6px;
+    transition:.2s linear;
+    -webkit-transition:.2s linear;
+    -moz-transition:.2s linear;
+    margin: 12px
+}
+input:focus {
+    outline: none;
+    box-shadow: 0px 0px 20px #0000b3;
+    border-color: #0000ff;
+}
+#q {
+    position: relative;
+    left: 500px;
+}
+#contact_us {
+    padding: 10px;
+}
+#inputCon{
+    margin-left: 1em;
+}

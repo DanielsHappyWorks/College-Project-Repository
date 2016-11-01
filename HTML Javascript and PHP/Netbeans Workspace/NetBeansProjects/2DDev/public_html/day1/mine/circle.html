@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Worked example from lecture notes</title>
+        <style>
+            #canvas
+            {
+                border:1px solid black;
+                width:500px;
+                height:500px;
+            }
+
+            #loadingMessage
+            {
+                position:absolute;
+                top:100px;
+                left:100px;
+                z-index:100;
+                font-size:50px;
+            }
+        </style>
+
+        <script>
+            var CANVAS_WIDTH = 500;
+            var CANVAS_HEIGHT = 500;
+
+            var canvas;
+            var g;
+
+            window.onload = onAllAssetsLoaded;
+            document.write("<div id='loadingMessage'>Loading...</div>");
+            function onAllAssetsLoaded()
+            {
+                // hide the webpage loading message
+                document.getElementById('loadingMessage').style.visibility = "hidden";
+
+                canvas = document.getElementById("canvas");
+                g = canvas.getContext("2d");
+                canvas.width = CANVAS_WIDTH;
+                canvas.height = CANVAS_HEIGHT;
+
+                renderCanvas();
+            }
+
+
+            function renderCanvas()
+            {
+                var red = 0;
+                var blue = 0;
+                var green = 0;
+                var deg = 360;
+
+                var x = 250;
+                var y = 250;
+                var radius = 200;
+
+                var size = 500;
+
+                for (i = 0; i <= 255; i++) {
+                    g.beginPath();
+                    g.fillStyle = "rgb(" + red + "," + green + "," + blue + ")";
+                    g.arc(x, y, radius, 0, Math.radians(deg));
+                    g.lineTo(x, y);
+                    g.fill();
+                    g.closePath();
+
+                    //red = red+1;
+                    blue = blue + 1;
+                    green = green + 1;
+                    deg = 360-i;
+                }
+
+            }
+
+
+            Math.radians = function (degrees)
+            {
+                /* Convert from degrees to radians */
+                return degrees * Math.PI / 180;
+            };
+
+
+            Math.degrees = function (radians)
+            {
+                /*  Convert from radians to degrees */
+                return radians * 180 / Math.PI;
+            };
+        </script>
+    </head>
+    <body>
+
+        <canvas id = "canvas">
+            Your browser does not support the HTML5 'Canvas' tag.
+        </canvas>
+    </body>
+</html> 

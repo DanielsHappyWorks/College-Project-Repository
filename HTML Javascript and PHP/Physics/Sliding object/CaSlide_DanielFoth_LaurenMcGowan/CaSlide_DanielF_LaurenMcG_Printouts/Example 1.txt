@@ -1,0 +1,64 @@
+*****DATA FOR OBJECT SLIDING DOWN A SURFACE*****
+At time 0 the position is (2 , -3 , 6)
+The velocity is (0 , 0 , 0)
+The acceleration is (2.4486 , 3.2648 , -3.0607)
+The force of gravity is (0 , 0 , -20)
+The force of normal is (5.76 , 7.68 , 12.8)
+The force of friction is (-0.768 , -1.024 , 0.96)
+The force net is (4.992 , 6.656 , -6.24)
+
+
+At time 0.5 the position is (2.3061 , -2.5919 , 5.6174)
+The velocity is (1.2243 , 1.6324 , -1.5304)
+The acceleration is (2.4486 , 3.2648 , -3.0607)
+The force of gravity is (0 , 0 , -20)
+The force of normal is (5.76 , 7.68 , 12.8)
+The force of friction is (-0.768 , -1.024 , 0.96)
+The force net is (4.992 , 6.656 , -6.24)
+
+
+At time 1 the position is (3.2243 , -1.3676 , 4.4696)
+The velocity is (2.4486 , 3.2648 , -3.0607)
+The acceleration is (2.4486 , 3.2648 , -3.0607)
+The force of gravity is (0 , 0 , -20)
+The force of normal is (5.76 , 7.68 , 12.8)
+The force of friction is (-0.768 , -1.024 , 0.96)
+The force net is (4.992 , 6.656 , -6.24)
+
+
+At time 1.5 the position is (4.7546 , 0.6729 , 2.5567)
+The velocity is (3.6729 , 4.8972 , -4.5911)
+The acceleration is (2.4486 , 3.2648 , -3.0607)
+The force of gravity is (0 , 0 , -20)
+The force of normal is (5.76 , 7.68 , 12.8)
+The force of friction is (-0.768 , -1.024 , 0.96)
+The force net is (4.992 , 6.656 , -6.24)
+
+
+At time 2 the position is (6.8972 , 3.5295 , -0.1214)
+The velocity is (4.8972 , 6.5295 , -6.1214)
+The acceleration is (2.4486 , 3.2648 , -3.0607)
+The force of gravity is (0 , 0 , -20)
+The force of normal is (5.76 , 7.68 , 12.8)
+The force of friction is (-0.768 , -1.024 , 0.96)
+The force net is (4.992 , 6.656 , -6.24)
+
+
+At time 2.5 the position is (9.6518 , 7.2024 , -3.5647)
+The velocity is (6.1214 , 8.1619 , -7.6518)
+The acceleration is (2.4486 , 3.2648 , -3.0607)
+The force of gravity is (0 , 0 , -20)
+The force of normal is (5.76 , 7.68 , 12.8)
+The force of friction is (-0.768 , -1.024 , 0.96)
+The force net is (4.992 , 6.656 , -6.24)
+
+
+At time 3 the position is (13.0186 , 11.6915 , -7.7732)
+The velocity is (7.3457 , 9.7943 , -9.1822)
+The acceleration is (2.4486 , 3.2648 , -3.0607)
+The force of gravity is (0 , 0 , -20)
+The force of normal is (5.76 , 7.68 , 12.8)
+The force of friction is (-0.768 , -1.024 , 0.96)
+The force net is (4.992 , 6.656 , -6.24)
+
+

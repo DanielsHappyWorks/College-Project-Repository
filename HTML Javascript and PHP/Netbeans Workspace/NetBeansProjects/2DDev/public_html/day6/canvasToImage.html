@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Worked example from lecture notes</title>
+<style>
+#canvas,
+#canvasImage
+{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 3;
+    border:1px solid black;
+    width:200px;
+    height:200px;
+}
+
+#canvasImageContainer
+{
+    margin-top:150px;
+}
+p
+{
+    margin:0px;
+}
+
+#loadingMessage
+{
+    position:absolute;
+    top:100px;
+    left:100px;
+    z-index:100;
+    font-size:50px;
+}
+#canvasImage{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+}
+#saveImageFile{
+    position: absolute;
+    top:210px;
+    left:10px;
+    
+     border:thin solid #aaa;
+                background-color:#e9e9e9;
+                padding:2px;
+                padding-left:7px;
+                padding-right: 7px;
+                color:black;
+                text-decoration: none;
+                font-family:Arial, sans-serif;
+                font-size:13px;
+                cursor:default;
+                background : -webkit-linear-gradient(top, #f9f9f9, #e0e0e0);
+                background : -moz-linear-gradient(top, #f9f9f9, #e0e0e0);
+                background : -ms-linear-gradient(top, #f9f9f9, #e0e0e0);
+                background : -o-linear-gradient(top, #f9f9f9, #e0e0e0);    
+                background : linear-gradient(top, #f9f9f9, #e0e0e0);
+
+}
+</style>
+
+<script>
+var CANVAS_WIDTH = 200;
+var CANVAS_HEIGHT = 200;
+var DOT_WIDTH = 20;   /* The dimensions of the black squares that are drawn on the canvas */
+var DOT_HEIGHT = 20;
+
+var canvas;
+var g;
+var x;
+var y;
+
+window.onload = onAllAssetsLoaded;
+document.write("<div id='loadingMessage'>Loading...</div>");
+function onAllAssetsLoaded()
+{
+    // hide the webpage loading message
+    document.getElementById('loadingMessage').style.visibility = "hidden";
+
+    canvas = document.getElementById("canvas");
+    g = canvas.getContext("2d");
+    canvas.width = CANVAS_WIDTH;
+    canvas.height = CANVAS_HEIGHT;
+
+    renderCanvas();
+
+    canvas.addEventListener('click', canvasClickHandler);
+    canvasImage.addEventListener('click', imageClickHandler);
+    canvas.addEventListener('contextmenu', canvasContextmenuHandler);
+
+}
+
+
+var isFirstTimeToRender = true;
+var isDrawingADot = false;
+function renderCanvas()
+{
+    if (isFirstTimeToRender)
+    {
+        isFirstTimeToRender = false;
+
+        /* set the canvas background colour */
+        g.fillStyle = "red";
+        g.fillRect(0, 0, 200, 200);
+    }
+    else if (isDrawingADot)
+    {
+        isDrawingADot = true;
+        g.fillStyle = "black";
+        g.fillRect(x - (DOT_WIDTH / 2), y - (DOT_HEIGHT / 2), DOT_WIDTH, DOT_HEIGHT);
+    }
+}
+
+
+function canvasClickHandler(e)
+{
+    if (e.which === 1)
+    {
+        isDrawingADot = true;
+        x = window.event.clientX;
+        y = window.event.clientY;
+
+        renderCanvas();
+
+        copyCanvasToImage();
+    }
+}
+function imageClickHandler(e)
+{
+    if (e.which === 1)
+    {
+        document.getElementById("canvas").style.zIndex = '3';
+        canvasClickHandler(e);
+    }
+}
+function canvasContextmenuHandler(e){
+    document.getElementById("canvas").style.zIndex = '1';
+}
+
+
+// Copy the content of the canvas to the image
+function copyCanvasToImage()
+{
+    // save canvas image as data url (png format by default)
+    var dataURL = canvas.toDataURL();
+
+    // set canvasImg image src to dataURL
+    // so it can be saved as an image
+    document.getElementById('canvasImage').src = dataURL;
+}
+</script>
+</head>
+<body>
+<div>
+<canvas id = "canvas">
+Your browser does not support the HTML5 'Canvas' tag.
+</canvas>
+</div>
+
+<div id = 'canvasImageContainer'>
+<img id='canvasImage' src="" alt="">
+
+</div>
+<a id="saveImageFile" download="image.png" onclick="this.href = canvas.toDataURL('image/png')">Download Image</a>
+</body>
+</html> 

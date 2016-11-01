@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Drawing Tool</title>
+        <style>
+            #keyboardCanvas
+            {
+                border:1px solid black;
+                width:500px;
+                height:500px;
+            }
+
+            #loadingMessage
+            {
+                position:absolute;
+                top:100px;
+                left:100px;
+                z-index:100;
+                font-size:50px;
+            }
+        </style>
+
+        <script>
+            var CANVAS_WIDTH = 500;
+            var CANVAS_HEIGHT = 500;
+
+            var canvas;
+            var g;
+            var x = 0;
+            var y = 0;
+
+            var img = new Image();
+            img.src = "images/1.jpg";
+            var img1 = new Image();
+            img1.src = "images/dkit02.gif";
+
+            //var colour = 'red';
+            var brushSize = 10;
+            var background = -1;
+            var type = 1;
+
+
+
+            window.onload = onAllAssetsLoaded;
+            document.write("<div id='loadingMessage'>Loading...</div>");
+            function onAllAssetsLoaded()
+            {
+                // hide the webpage loading message
+                document.getElementById('loadingMessage').style.visibility = "hidden";
+
+                canvas = document.getElementById("keyboardCanvas");
+                g = canvas.getContext("2d");
+                canvas.width = CANVAS_WIDTH;
+                canvas.height = CANVAS_HEIGHT;
+                g.fillStyle = 'red';
+                document.getElementById("colourSelector").value = "#FF0000";
+
+                renderCanvas();
+
+                canvas.addEventListener('click', clickHandler);
+                //canvas.addEventListener('mousedown', mousedownHandler);
+                //canvas.addEventListener('mouseup', mouseupHandler);
+                canvas.addEventListener('mousemove', mousemoveHandler);
+            }
+
+
+            function renderCanvas()
+            {
+                if (background !== 0) {
+                    if (background === 1) {
+                        g.clearRect(0, 0, canvas.width, canvas.height);
+                    }
+                    else if (background === 2) {
+                        g.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    }
+                    else if (background === 3) {
+                        g.drawImage(img1, 0, 0, canvas.width, canvas.height);
+                    }
+
+                    background = 0;
+                }
+                else {
+                    if (type === 1) {
+                        g.beginPath();
+                        g.arc(x, y, brushSize, brushSize, 0, Math.radians(360));
+                        g.fill();
+                        g.closePath();
+                    }
+                    else if (type === 2) {
+                        g.fillRect(x, y, brushSize, brushSize);
+                    }
+                }
+            }
+            function mousemoveHandler(e)
+            {
+                if (e.which === 1)
+                {
+                    x = e.x;
+                    y = e.y;
+                    renderCanvas();
+                }
+            }
+            function clickHandler(e)
+            {
+                if (e.which === 1)
+                {
+                    x = e.x;
+                    y = e.y;
+                    renderCanvas();
+                }
+            }
+            function getColour(c)
+            {
+                g.fillStyle = c;
+            }
+            function renderBackground(b)
+            {
+                background = parseInt(b);
+                renderCanvas();
+            }
+            function getType(t)
+            {
+                type = parseInt(t);
+            }
+            function getThickness(t)
+            {
+                brushSize = t;
+            }
+
+            Math.radians = function (degrees)
+            {
+                /* Convert from degrees to radians */
+                return degrees * Math.PI / 180;
+            };
+
+
+            Math.degrees = function (radians)
+            {
+                /*  Convert from radians to degrees */
+                return radians * 180 / Math.PI;
+            };
+        </script>
+    </head>
+
+    <body>
+        <canvas id = "keyboardCanvas" tabindex="1">
+            Your browser does not support the HTML5 'Canvas' tag.
+        </canvas>
+        <br>
+        <button value=1 onclick="renderBackground(this.value)">Clean</button>
+        <br>
+        <button value=2 onclick="renderBackground(this.value)">Background1</button>
+        <button value=3 onclick="renderBackground(this.value)">Background2</button>
+        <br>
+        <button value="yellow" onclick="getColour(this.value)">Yellow</button>
+        <button value="red" onclick="getColour(this.value)">Red</button>
+        <button value="blue" onclick="getColour(this.value)">Blue</button>
+        <input type="color" id="colourSelector" onchange="getColour(this.value)">
+        <br>
+        <button value=10 onclick="getThickness(this.value)">Thin Brush</button>
+        <button value=40 onclick="getThickness(this.value)">Thick Brush</button>
+        <input type="range" min="5" max="100" onchange="getThickness(this.value)">
+        <br>
+        <button value=1 onclick="getType(this.value)">Circle</button>
+        <button value=2 onclick="getType(this.value)">Square</button>
+    </body>
+</html> 

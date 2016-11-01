@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Worked example from lecture notes</title>
+<style>
+#canvas
+{
+    border:1px solid black;
+    width:500px;
+    height:500px;
+}
+
+#loadingMessage
+{
+    position:absolute;
+    top:100px;
+    left:100px;
+    z-index:100;
+    font-size:50px;
+}
+</style>
+
+<script>
+var CANVAS_WIDTH = 500;
+var CANVAS_HEIGHT = 500;
+
+var canvas;
+var g;
+
+window.onload = onAllAssetsLoaded;
+document.write("<div id='loadingMessage'>Loading...</div>");
+function onAllAssetsLoaded()
+{
+    // hide the webpage loading message
+    document.getElementById('loadingMessage').style.visibility = "hidden";
+
+    /* associate the javascript canvas variable to the HTML canvas element  */
+    canvas = document.getElementById("canvas");
+
+    /* Assign a graphics context to the canvas, so that we can draw on it */
+    g = canvas.getContext("2d");
+
+    /* Give the canvas a width and height */
+    /* The width and height are in canvas logical units */
+    canvas.width = CANVAS_WIDTH;
+    canvas.height = CANVAS_HEIGHT;
+
+    renderCanvas();
+}
+
+
+var numberOfBlocks = 10;
+function renderCanvas()
+{
+    g.fillStyle = "red";
+    g.fillRect(0, 0, 250, 250);
+
+    g.fillStyle = "yellow";
+    g.fillRect(0, 250, 250, 250);
+
+    g.fillStyle = "green";
+    g.fillRect(250, 0, 250, 250);
+
+    g.fillStyle = "blue";
+    g.fillRect(250, 250, 250, 250);
+
+    for (i = 0; i < numberOfBlocks; i ++)
+    {
+        var red = Math.round(Math.random() * 255);
+        var green = Math.round(Math.random() * 255);
+        var blue = Math.round(Math.random() * 255);
+        var x = Math.round(Math.random() * CANVAS_WIDTH);
+        var y = Math.round(Math.random() * CANVAS_HEIGHT);
+        var size = Math.round(Math.random() * CANVAS_WIDTH);
+        g.fillStyle = "rgb(" + red + "," + green + "," + blue + ")";
+        g.fillRect(x, y, size, size);
+    }
+}
+
+
+function setBlockSize(newSize)
+{
+    numberOfBlocks = newSize;
+    renderCanvas();
+}
+</script>
+</head>
+
+<body>
+<canvas id = "canvas">
+Your browser does not support the HTML5 'Canvas' tag.
+</canvas><br><br>
+
+<label for='numberOfBlocks'>Number of Blocks: </label>
+<input type="range" value ='10' id="numberOfBlocks" min="1" max="50" onchange='setBlockSize(this.value)'>
+</body>
+</html>

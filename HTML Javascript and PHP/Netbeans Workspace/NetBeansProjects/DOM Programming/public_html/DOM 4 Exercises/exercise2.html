@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>
+            function takeData(){
+                var data = document.getElementsByTagName('input')[0].value;
+                document.getElementsByTagName('input')[1].value = data;
+            }
+        </script>
+    </head>
+    <body>
+        <input onblur="takeData()">
+        <input >
+        <p>Create a website with two textboxes so that when you exit the first textbox the contents of the first textbox become the contents of the second textbox</p>
+    </body>
+</html>

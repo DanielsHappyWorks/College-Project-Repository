@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Worked example from lecture notes</title>
+        <style>
+            *
+            {
+                -webkit-touch-callout: none;  /* Disable element selection in app */
+                -webkit-user-select: none;    /* Disable text selection in app */ 
+            }
+
+            #keyboardCanvas,
+            body
+            {
+                padding:0px;
+                margin:0px;
+                width:100%;
+                height:100%;
+            }
+
+            #keyboardCanvas
+            {
+                position:fixed;
+                background-color:#222222;
+            }
+
+            #loadingMessage
+            {
+                position:fixed;
+                top:100px;
+                left:100px;
+                z-index:100;
+                font-size:50px;
+            }
+
+        </style>
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+        <script>
+
+            var canvas;
+            var g;
+            var x = 0;
+            var y = 0;
+
+            var img = new Image();
+            img.src = "./images/1.jpg";
+
+            window.onload = onAllAssetsLoaded;
+            function onAllAssetsLoaded()
+            {
+                document.addEventListener("deviceready", onDeviceReady, false);
+            }
+
+            function onDeviceReady()
+            {
+
+                canvas = document.getElementById("keyboardCanvas");
+                g = canvas.getContext("2d");
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+
+                renderCanvas();
+
+                //canvas.addEventListener('click', clickHandler);
+                //canvas.addEventListener('mousedown', mousedownHandler);
+                //canvas.addEventListener('mouseup', mouseupHandler);
+                canvas.addEventListener('touchmove', touchmoveHandler);
+                canvas.addEventListener('touchstart', touchstartHandler);
+                canvas.addEventListener("touchstart", function (e) {
+                    onStart(e);
+                }, false);
+            }
+
+            function renderCanvas()
+            {
+                g.clearRect(0, 0, canvas.width, canvas.height);
+                g.drawImage(img, x, y, 100, 100);
+            }
+
+            function onStart(touchEvent) {
+                if (navigator.userAgent.match(/Android/i)) {
+                    touchEvent.preventDefault();
+                }
+            }
+
+            function touchmoveHandler(e)
+            {
+                if (checkIfMouseOver(e.changedTouches[0].pageX, e.changedTouches[0].pageY) === true)
+                {
+                    x = e.changedTouches[0].pageX - offX;
+                    y = e.changedTouches[0].pageY - OffY;
+                    renderCanvas();
+                }
+            }
+
+            function touchstartHandler(e)
+            {
+                if (checkIfMouseOver(e.changedTouches[0].pageX, e.changedTouches[0].pageY) === true)
+                {
+                    offX = e.changedTouches[0].pageX - x;
+                    OffY = e.changedTouches[0].pageY - y;
+                }
+            }
+
+            function checkIfMouseOver(X, Y)
+            {
+                if (X < x || Y < y || X > x + 100 || Y > y + 100) {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        </script>
+    </head>
+
+    <body>
+        <canvas id = "keyboardCanvas" tabindex="1">
+            Your browser does not support the HTML5 'Canvas' tag.
+        </canvas>
+    </body>
+</html> 

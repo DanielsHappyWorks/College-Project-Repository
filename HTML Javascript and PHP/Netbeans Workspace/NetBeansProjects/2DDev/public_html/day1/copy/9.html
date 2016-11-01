@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Worked example from lecture notes</title>
+<style>
+#canvas
+{
+    border:1px solid black;
+    width:500px;
+    height:500px;
+}
+
+#loadingMessage
+{
+    position:absolute;
+    top:100px;
+    left:100px;
+    z-index:100;
+    font-size:50px;
+}
+</style>
+
+<script>
+var CANVAS_WIDTH = 500;
+var CANVAS_HEIGHT = 500;
+var NUMBER_OF_SLICES = 255;  /* The number of different colours to be shown in the circle */
+
+var canvas;
+var g;
+
+
+window.onload = onAllAssetsLoaded;
+document.write("<div id='loadingMessage'>Loading...</div>");
+function onAllAssetsLoaded()
+{
+    // hide the webpage loading message
+    document.getElementById('loadingMessage').style.visibility = "hidden";
+
+    canvas = document.getElementById("canvas");
+    g = canvas.getContext("2d");
+    canvas.width = CANVAS_WIDTH;
+    canvas.height = CANVAS_HEIGHT;
+
+    renderCanvas();
+}
+
+
+var currentColour;
+var startAngle;
+var endAngle;
+function renderCanvas()
+{
+    for (var i = 0; i < NUMBER_OF_SLICES; i++)
+    {
+        var currentColour = i * (255 / NUMBER_OF_SLICES);
+        startAngle = i * (360 / NUMBER_OF_SLICES);
+        endAngle = (i + 1) * (360 / NUMBER_OF_SLICES);
+
+        g.beginPath();
+        g.fillStyle = "rgb(" + currentColour + "," + currentColour + "," + currentColour + ")";
+
+        g.arc(250, 250, 250, Math.radians(startAngle), Math.radians(endAngle));
+        g.lineTo(250, 250);
+        g.fill();
+        g.closePath();
+
+    }
+}
+
+
+// Convert from degrees to radians.
+Math.radians = function (degrees)
+{
+    return degrees * Math.PI / 180;
+};
+
+
+// Convert from radians to degrees.
+Math.degrees = function (radians)
+{
+    return radians * 180 / Math.PI;
+};
+</script>
+</head>
+
+<body>
+<canvas id = "canvas">
+Your browser does not support the HTML5 'Canvas' tag.
+</canvas>
+</body>
+</html>

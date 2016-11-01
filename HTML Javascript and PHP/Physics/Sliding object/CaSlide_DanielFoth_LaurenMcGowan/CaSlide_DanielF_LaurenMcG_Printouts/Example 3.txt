@@ -1,0 +1,64 @@
+*****DATA FOR OBJECT SLIDING DOWN A SURFACE*****
+At time 0 the position is (3 , 2 , 4)
+The velocity is (0 , 0 , 0)
+The acceleration is (0 , 0 , 0)
+The force of gravity is (0 , 0 , -14.715)
+The force of normal is (1.7658 , 3.9731 , 5.2974)
+The force of friction is (-0.1167 , -0.2625 , 0.6222)
+The force net is (0 , 0 , 0)
+
+
+At time 0.5 the position is (3 , 2 , 4)
+The velocity is (0 , 0 , 0)
+The acceleration is (0 , 0 , 0)
+The force of gravity is (0 , 0 , -14.715)
+The force of normal is (1.7658 , 3.9731 , 5.2974)
+The force of friction is (-0.1167 , -0.2625 , 0.6222)
+The force net is (0 , 0 , 0)
+
+
+At time 1 the position is (3 , 2 , 4)
+The velocity is (0 , 0 , 0)
+The acceleration is (0 , 0 , 0)
+The force of gravity is (0 , 0 , -14.715)
+The force of normal is (1.7658 , 3.9731 , 5.2974)
+The force of friction is (-0.1167 , -0.2625 , 0.6222)
+The force net is (0 , 0 , 0)
+
+
+At time 1.5 the position is (3 , 2 , 4)
+The velocity is (0 , 0 , 0)
+The acceleration is (0 , 0 , 0)
+The force of gravity is (0 , 0 , -14.715)
+The force of normal is (1.7658 , 3.9731 , 5.2974)
+The force of friction is (-0.1167 , -0.2625 , 0.6222)
+The force net is (0 , 0 , 0)
+
+
+At time 2 the position is (3 , 2 , 4)
+The velocity is (0 , 0 , 0)
+The acceleration is (0 , 0 , 0)
+The force of gravity is (0 , 0 , -14.715)
+The force of normal is (1.7658 , 3.9731 , 5.2974)
+The force of friction is (-0.1167 , -0.2625 , 0.6222)
+The force net is (0 , 0 , 0)
+
+
+At time 2.5 the position is (3 , 2 , 4)
+The velocity is (0 , 0 , 0)
+The acceleration is (0 , 0 , 0)
+The force of gravity is (0 , 0 , -14.715)
+The force of normal is (1.7658 , 3.9731 , 5.2974)
+The force of friction is (-0.1167 , -0.2625 , 0.6222)
+The force net is (0 , 0 , 0)
+
+
+At time 3 the position is (3 , 2 , 4)
+The velocity is (0 , 0 , 0)
+The acceleration is (0 , 0 , 0)
+The force of gravity is (0 , 0 , -14.715)
+The force of normal is (1.7658 , 3.9731 , 5.2974)
+The force of friction is (-0.1167 , -0.2625 , 0.6222)
+The force net is (0 , 0 , 0)
+
+

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		
+		<meta name="viewport" content="width-device-width,initial-scale=1.0" />
+		
+		<title>
+			JSON Example: CREATE JSON
+		</title>
+		
+		<style type="text/css">
+			#firstP {
+				color: yellow;
+				background-color: blue
+			}
+
+			#secondP {
+				color: orange;
+				background-color: green
+			}
+		</style>
+		
+		<script>
+			// Creating a CONSTRUCTOR FUNCTION (parameters are the values our objects will have)
+			function CD(artist, title, price) {
+				this.artist = artist;
+				this.title = title;
+				this.price = price;
+			}
+			
+			function writeToJSON() {
+				console.log("1");
+				// Creating a new OBJECT (a CD)
+				var newCD1 = new CD("Ed Sheeran", "Multiply (or X)", 12.99);
+				for (x in newCD1) {
+					console.log("The contents of " + x + " are: " + newCD1[x]);
+				}
+				
+				// Converting the new object into JSON FORMAT and displaying on the webpage
+				var jsonString1 = JSON.stringify(newCD1);
+				document.getElementById( "firstP" ).innerHTML = jsonString1;
+				
+				console.log("2");
+				// Getting information from the user to be used to create a second CD object
+				var artist2 = prompt("Another artist");
+				var title2 = prompt("Another title");
+				var price2 = prompt("Another price");
+				console.log("3");
+				
+				// Creating a SECOND CD object from user data, and converting into JSON format ... LIKE "WRITING TO JSON"
+				var newCD2 = new CD(artist2, title2, price2);
+				var jsonString2 = JSON.stringify(newCD2);
+				document.getElementById( "secondP" ).innerHTML = jsonString2;
+			}
+		</script>
+	</head>
+	
+	<body onload="writeToJSON()">
+		<h1>
+			JSON Example
+		</h1>
+		
+		<p id="firstP"></p>
+
+		<p id="secondP"></p>
+	</body>
+</html>

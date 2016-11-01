@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Worked example from lecture notes</title>
+        <style>
+            #canvas
+            {
+                border:1px solid black;
+                width:500px;
+                height:500px;
+            }
+
+            #loadingMessage
+            {
+                position:absolute;
+                top:100px;
+                left:100px;
+                z-index:100;
+                font-size:50px;
+            }
+        </style>
+
+        <script>
+            var CANVAS_WIDTH = 200;
+            var CANVAS_HEIGHT = 200;
+
+            var canvas;
+            var g;
+            var animationIntervalImage1 = null; // set to null when not running
+            var animationIntervalImage2 = null;
+            var animationIntervalImage3 = null;
+            var animationIntervalImage4 = null;
+            var animationIntervalImage5 = null;
+            var finished = false;
+            var degree = 0;
+
+            var img1 = new Image();
+            img1.src = "images/1.jpg";
+            var img1_x = 0, img1_y = 0, img1_sx = 0, img1_sy = 0;
+
+            var img2 = new Image();
+            img2.src = "images/bck.jpg";
+            var img2_x = 200, img2_y = 0, img2_sx = 0, img2_sy = 0;
+
+            var img3 = new Image();
+            img3.src = "images/dkit02.gif";
+            var img3_x = 0, img3_y = 200, img3_sx = 0, img3_sy = 0;
+
+            var img4 = new Image();
+            img4.src = "images/6ONIL.gif";
+            var img4_x = 200, img4_y = 200, img4_sx = 0, img4_sy = 0;
+
+            var img5 = new Image();
+            img5.src = "images/6ONIL.gif";
+            var img5_x = CANVAS_WIDTH / 2, img5_y = CANVAS_HEIGHT / 2, img5_sx = 0, img5_sy = 0;
+
+            window.onload = onAllAssetsLoaded;
+            document.write("<div id='loadingMessage'>Loading...</div>");
+            function onAllAssetsLoaded()
+            {
+                // hide the webpage loading message
+                document.getElementById('loadingMessage').style.visibility = "hidden";
+
+                canvas = document.getElementById("canvas");
+                g = canvas.getContext("2d");
+                canvas.width = CANVAS_WIDTH;
+                canvas.height = CANVAS_HEIGHT;
+
+                startAnimationTimerImage1();
+                startAnimationTimerImage2();
+                startAnimationTimerImage3();
+                startAnimationTimerImage4();
+                startAnimationTimerImage5();
+
+                renderCanvas();
+
+            }
+
+
+            function renderCanvas()
+            {
+                /* Continuously call requestAnimationFrame() to keep rendering the canvas */
+                requestAnimationFrame(renderCanvas); // recursively call next frame
+                g.save();  // remember the current canvas state
+                g.drawImage(img1, img1_x, img1_y, img1_sx, img1_sy);
+                g.drawImage(img2, img2_x, img2_y, img2_sx, img2_sy);
+                g.drawImage(img3, img3_x, img3_y, img3_sx, img3_sy);
+                g.drawImage(img4, img4_x, img4_y, img4_sx, img4_sy);
+
+                g.translate(canvas.width / 2, canvas.height / 2);
+                g.rotate(Math.PI / 4);
+                g.translate(-canvas.width / 2, -canvas.height / 2);
+
+                g.drawImage(img5, img5_x, img5_y, img5_sx, img5_sy);
+
+                g.restore(); // restore the canvas state
+
+            }
+
+
+            function updateImage1Position()
+            {
+                img1_sx++;
+                img1_sy++;
+
+                if (img1_sx >= CANVAS_WIDTH / 2 && img1_sy >= CANVAS_HEIGHT / 2) {
+                    clearInterval(animationIntervalImage1);
+                    animationIntervalImage1 = null;
+                }
+            }
+            function startAnimationTimerImage1()
+            {
+                if (animationIntervalImage1 === null)
+                {
+                    animationIntervalImage1 = setInterval(updateImage1Position, 40);
+                }
+            }
+            function updateImage2Position()
+            {
+                img2_x--;
+                img2_sy++;
+                img2_sx++;
+
+                if (img2_sx <= CANVAS_WIDTH / 2 && img2_sy >= CANVAS_HEIGHT / 2) {
+                    clearInterval(animationIntervalImage2);
+                    animationIntervalImage2 = null;
+                }
+            }
+            function startAnimationTimerImage2()
+            {
+                if (animationIntervalImage2 === null)
+                {
+                    animationIntervalImage2 = setInterval(updateImage2Position, 60);
+                }
+            }
+            function updateImage3Position()
+            {
+                img3_y--;
+                img3_sy++;
+                img3_sx++;
+
+
+                if (img3_sx <= CANVAS_WIDTH / 2 && img3_sy >= CANVAS_HEIGHT / 2) {
+                    clearInterval(animationIntervalImage3);
+                    animationIntervalImage3 = null;
+                }
+            }
+            function startAnimationTimerImage3()
+            {
+                if (animationIntervalImage3 === null)
+                {
+                    animationIntervalImage3 = setInterval(updateImage3Position, 60);
+                }
+            }
+            function updateImage4Position()
+            {
+                img4_x--;
+                img4_y--;
+                img4_sy++;
+                img4_sx++;
+
+                if (img4_sx >= CANVAS_WIDTH / 2 && img4_sy >= CANVAS_HEIGHT / 2) {
+                    clearInterval(animationIntervalImage4);
+                    animationIntervalImage4 = null;
+                    finished = true;
+                }
+            }
+            function startAnimationTimerImage4()
+            {
+                if (animationIntervalImage4 === null)
+                {
+                    animationIntervalImage4 = setInterval(updateImage4Position, 80);
+                }
+            }
+
+            function updateImage5Position()
+            {
+                if (finished) {
+                    img5_x--;
+                    img5_y--;
+                    img5_sy += 2;
+                    img5_sx += 2;
+                    degree++;
+
+                    g.translate(canvas.width / 2, canvas.height / 2);
+                    g.rotate(Math.radians(degree));
+                    g.translate(-canvas.width / 2, -canvas.height / 2);
+
+                    if (degree>360) {
+                        clearInterval(animationIntervalImage5);
+                        animationIntervalImage5 = null;
+                    }
+                }
+            }
+            function startAnimationTimerImage5()
+            {
+                if (animationIntervalImage5 === null)
+                {
+                    animationIntervalImage5 = setInterval(updateImage5Position, 100);
+                }
+            }
+            Math.degrees = function (radians)
+            {
+                return radians * 180 / Math.PI;
+            };
+            Math.radians = function (degrees)
+            {
+                return degrees * Math.PI / 180;
+            };
+        </script>
+    </head>
+
+    <body>
+        <canvas id = "canvas" tabindex="1">
+            Your browser does not support the HTML5 'Canvas' tag.
+        </canvas>
+    </body>
+</html>

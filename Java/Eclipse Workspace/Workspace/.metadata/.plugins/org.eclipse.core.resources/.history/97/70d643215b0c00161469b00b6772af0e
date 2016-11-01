@@ -1,0 +1,45 @@
+package Test;
+
+import static org.junit.Assert.*;
+
+import java.io.FileNotFoundException;
+import java.io.RandomAccessFile;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import Model.Show;
+
+public class ShowTest {
+
+	@Before
+	public void setUp() throws Exception {
+	}
+
+	@After
+	public void tearDown() throws Exception {
+	}
+
+	@Test
+	public void testRead() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testWrite() {
+		try {
+			RandomAccessFile raf = new RandomAccessFile("c:/temp/testWrite.txt","rw");
+			Show s = new Show("RAF", "Daniel", "Action", 1.99, 5, 6);
+			assertNotNull(s);
+			
+			boolean success = Show.write(raf, s);
+			assertTrue(success);
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+}

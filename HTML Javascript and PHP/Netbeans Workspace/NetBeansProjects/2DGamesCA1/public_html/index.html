@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>2D Game Ca1</title>
+        <style>
+            #canvas
+            {
+                width:500px;
+                height:500px;
+            }
+
+            #loadingMessage
+            {
+                position:absolute;
+                top:100px;
+                left:100px;
+                z-index:100;
+                font-size:50px;
+            }
+        </style>
+
+        <script>
+
+            // creates the canvas variables 
+            var CANVAS_WIDTH = 500;
+            var CANVAS_HEIGHT = 500;
+            var canvas;
+            var g;
+
+            // game 
+            // 
+            // variables 
+            var x = 250, num;
+            var startCreatingObjects = null;
+            var countDownPause = null;
+            var pause = true;
+            var pauseTime = 3;
+            var score;
+            var object = new Array();
+            var sprite;
+            var lastSprite;
+            var fallingSpeed, bomb, coin, heart, pointsToWin;
+
+            // fps counter variables
+            var timestampArray = new Array();
+            var startCheckingFPS = null;
+            var framesPerSecond = 0;
+
+            // menu variables
+            var menu = true, mainMenu = true;
+            var winMenu, looseMenu, levelMenu;
+
+            // menu images
+            var menuMenuImg = new Image();
+            menuMenuImg.src = "./images/menu/menu.png";
+            var winMenuImg = new Image();
+            winMenuImg.src = "./images/menu/win.png";
+            var looseMenuImg = new Image();
+            looseMenuImg.src = "./images/menu/gameOver.png";
+
+            // loads the image for the background 
+            var background = new Image();
+            background.src = "./images/background/background.png";
+
+            // loads the images for the player 
+            var charIdle = new Image();
+            charIdle.src = "./images/char/idle1.png";
+            var charRun1 = new Image();
+            charRun1.src = "./images/char/run1.png";
+            var charRun2 = new Image();
+            charRun2.src = "./images/char/run2.png";
+            var charRun3 = new Image();
+            charRun3.src = "./images/char/run3.png";
+            var charRun1R = new Image();
+            charRun1R.src = "./images/char/run1R.png";
+            var charRun2R = new Image();
+            charRun2R.src = "./images/char/run2R.png";
+            var charRun3R = new Image();
+            charRun3R.src = "./images/char/run3R.png";
+
+            // loads the images for the other objects 
+            var heartSprite = new Image();
+            heartSprite.src = "./images/other/heart1.png";
+            var coinSprite = new Image();
+            coinSprite.src = "./images/other/coin1.png";
+            var bombSprite = new Image();
+            bombSprite.src = "./images/other/bomb.png";
+
+            // loads the images for the fruit 
+            var fruit1 = new Image();
+            fruit1.src = "./images/fruit/apple.png";
+            var fruit2 = new Image();
+            fruit2.src = "./images/fruit/bannana.png";
+            var fruit3 = new Image();
+            fruit3.src = "./images/fruit/cherry.png";
+            var fruit4 = new Image();
+            fruit4.src = "./images/fruit/grapes.png";
+            var fruit5 = new Image();
+            fruit5.src = "./images/fruit/orange.png";
+            var fruit6 = new Image();
+            fruit6.src = "./images/fruit/pear.png";
+            var fruit7 = new Image();
+            fruit7.src = "./images/fruit/pinapple.png";
+            var fruit8 = new Image();
+            fruit8.src = "./images/fruit/plum.png";
+            var fruit9 = new Image();
+            fruit9.src = "./images/fruit/strawberry.png";
+
+            // creating levels and stores then in an array
+            // Level(image, bombStatus, coinStatus, objectFallingSpeedInSec, pointsToWin)
+            var currentLevel = 0;
+            var lvl1 = new Image();
+            var lvl2 = new Image();
+            var lvl3 = new Image();
+            var lvl4 = new Image();
+            lvl1.src = "./images/menu/lvl1.png";
+            var levelArray = new Array();
+            // level 1
+            levelArray.push(new Level(lvl1, false, false, false, 2.5, 1000));
+            // level 2
+            lvl2.src = "./images/menu/lvl2.png";
+            levelArray.push(new Level(lvl2, false, true, true, 2.1, 5000));
+            // level 3
+            lvl3.src = "./images/menu/lvl3.png";
+            levelArray.push(new Level(lvl3, true, true, true, 1.8, 25000));
+            // level 4
+            lvl4.src = "./images/menu/lvl4.png";
+            levelArray.push(new Level(lvl4, true, true, true, 1.4, 100000));
+
+            // Creates the player
+            var player = new Player();
+
+            // loads all assets
+            window.onload = onAllAssetsLoaded;
+            document.write("<div id='loadingMessage'>Loading...</div>");
+
+            function onAllAssetsLoaded()
+            {
+                // hide the webpage loading message
+                document.getElementById('loadingMessage').style.visibility = "hidden";
+
+                // associate the javascript canvas variable to the HTML canvas element  
+                canvas = document.getElementById("canvas");
+
+                // Assign a graphics context to the canvas, so that we can draw on it 
+                g = canvas.getContext("2d");
+
+                // Give the canvas a width and height 
+                // The width and height are in canvas logical units 
+                canvas.width = CANVAS_WIDTH;
+                canvas.height = CANVAS_HEIGHT;
+
+                // All of the handlers for the game 
+                window.addEventListener('keydown', keydownHandler);
+                window.addEventListener('keyup', keyUpHandler);
+                window.addEventListener('mousemove', mouseMoveHandler);
+                window.addEventListener('mouseup', mouseUpHandler);
+                canvas.addEventListener("mouseleave", mouseLeaveHandler);
+                canvas.addEventListener("mouseenter", mouseEnterHandler);
+
+                // loads the score from the cookies
+                loadScore();
+
+                // renders the canvas for the first time 
+                renderCanvas();
+            }
+
+            function renderCanvas()
+            {
+                if (menu) { // draws the menu if said menu is set to true
+                    if (mainMenu) {
+                        g.drawImage(menuMenuImg, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+                    }
+                    else if (levelMenu) {
+                        g.drawImage(levelArray[currentLevel].getLevelMenu(), 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+                    }
+                    else if (winMenu) {
+                        g.drawImage(winMenuImg, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+                    }
+                    else if (looseMenu) {
+                        g.drawImage(looseMenuImg, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+                    }
+                }
+                else { // plays the game
+                    // renders the canvas repeatedly unless the game is paused 
+                    if (pause === false) {
+                        requestAnimationFrame(renderCanvas);
+                        timestampArray.push(0);
+                    }
+                    // Draws background on the canvas 
+                    g.drawImage(background, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+                    // Draws falling objects on the canvas
+                    for (i = 0; i < object.length; i++) {
+                        if (object[i] !== null)
+                            object[i].draw();
+                    }
+
+                    // Draws player on the canvas 
+                    player.draw();
+
+                    // Draws the fps counter
+                    g.fillStyle = "blue";
+                    g.font = "italic 20px cursive";
+                    if (!heart) {
+                        g.fillText("FPS: " + framesPerSecond, 10, 50);
+                    }
+                    else {
+                        g.fillText("FPS: " + framesPerSecond, 10, 105);
+                    }
+                }
+            }
+
+            function initialiseLevel() { // initlalises a level by setting all the global vars to the global vars and starts the level
+                fallingSpeed = levelArray[currentLevel].getObjectFallingSpeed();
+                bomb = levelArray[currentLevel].getBombStatus();
+                coin = levelArray[currentLevel].getCoinStatus();
+                heart = levelArray[currentLevel].getHeartStatus();
+                pointsToWin = levelArray[currentLevel].getPointsToWin();
+                //turns of the menus and starts level
+                levelMenu = false;
+                menu = false;
+                countDownPauseTimer();
+            }
+
+            function keydownHandler(e)
+            {
+                if (!menu) { // checks if game is not in the menu
+                    if (pause === false) { // checks if game is paused
+                        if (e.keyCode === 37 && player.getX() > 0)  // left
+                        {
+                            player.setX(player.getX() - player.getSpeed()); // moves player
+                            player.setCurrentSprite(player.getMovingSpritesL()[player.getNextSpriteId()]); // changes the sprite to the vext one
+                        }
+                        else if (e.keyCode === 39 && player.getX() < CANVAS_WIDTH - 90) // right
+                        {
+                            player.setX(player.getX() + player.getSpeed()); //moves player
+                            player.setCurrentSprite(player.getMovingSpritesR()[player.getNextSpriteId()]); //changes the sprite to the vext one
+                        }
+                        else if (e.keyCode === 32) { // space used game is paused
+                            pauseGame();
+                        }
+                    }
+                    else if (e.keyCode === 32) // space used game is started
+                    {
+                        countDownPauseTimer();
+                    }
+                }
+                else if (e.keyCode === 13) { // if enter is pressed next menu is triggered or game is paused
+                    if (mainMenu === true) { // goes from main menu to level menu
+                        mainMenu = false;
+                        levelMenu = true;
+                        renderCanvas();
+                    }
+                    else if (levelMenu === true) { // starts the game
+                        initialiseLevel();
+                    }
+                    else if (winMenu === true) { // restarts game on win
+                        restartGame();
+                    }
+                    else if (looseMenu === true) { // restarts game on loose
+                        restartGame();
+                    }
+                }
+            }
+
+            function restartGame() { // restarts the game and variables so it can be played again after the session is over
+                player.setHearts(5);
+                player.setPoints(0);
+                mainMenu = true;
+                winMenu = false;
+                looseMenu = false;
+                pause = true;
+                currentLevel = 0;
+
+                if (startCreatingObjects !== null) {// clears the interval for creating falling objects
+                    object = new Array();
+                    clearInterval(startCreatingObjects);
+                    startCreatingObjects = null;
+                }
+
+                renderCanvas();
+            }
+
+            function keyUpHandler(e)
+            {
+                if (!pause) {
+                    player.setCurrentSprite(player.getIdleSprite()); // set sprite to idle
+                }
+            }
+
+            function mouseUpHandler(e)
+            {
+                if (!pause) {
+                    player.setCurrentSprite(player.getIdleSprite()); // set sprite to idle
+                }
+            }
+
+            function mouseMoveHandler(e)
+            {
+                if (pause === false && !menu) { // checks if game is paused
+                    if (e.which === 1 && checkIfMouseOver(e.x, e.y) === true) // checks if mouse is over the sprite and if left button is clicked
+                    {
+                        if (player.getX() % 3 === 0) { // changes the sprite every 3 pixels to the next one
+                            if (e.x < player.getX() + player.getWidth() / 2) { // to left
+                                player.setCurrentSprite(player.getMovingSpritesL()[player.getNextSpriteId()]);
+                            }
+                            else if (e.x > player.getX() + player.getWidth() / 2) { // to right
+                                player.setCurrentSprite(player.getMovingSpritesR()[player.getNextSpriteId()]);
+                            }
+                        }
+                        player.setX(e.x - player.getWidth() / 2); // updates the players position
+                    }
+                }
+            }
+
+            function mouseLeaveHandler(e)
+            {
+                if (!menu) {
+                    pauseGame(); // pauses the game if the mouse leaves the canvas
+                }
+            }
+
+            function pauseGame() { // pauses the game and stops all the intervals
+                pause = true;
+
+                if (startCreatingObjects !== null) { // clears falling objects interval
+                    object = new Array();
+                    clearInterval(startCreatingObjects);
+                    startCreatingObjects = null;
+                }
+
+                if (countDownPause !== null) { // if the interval to start the countdown for the pause isnt cleared it will clear it 
+                    clearInterval(countDownPause);
+                    countDownPause = null;
+                    pauseTime = 3;
+                }
+                if (startCheckingFPS !== null) { // clears fps interval
+                    clearInterval(startCheckingFPS);
+                    startCheckingFPS = null;
+                }
+                drawPauseText(); // draws pause text on screen
+            }
+
+            function drawPauseText() {
+                renderCanvas(); // renders canvas to clear it
+                g.fillStyle = "blue";
+                g.font = "italic 100px cursive";
+                g.fillText("PAUSED", 50, canvas.height / 2); // draws text
+            }
+
+            function mouseEnterHandler(e)
+            {
+                if (pause === true && !menu) { // if the game is paused and the mause enters the canvas it starts the timer for the pause to stop
+                    countDownPauseTimer();
+                }
+            }
+
+            function drawPauseCountDown()
+            {
+                renderCanvas(); //renders backgrounds and images in the canvas
+                g.fillStyle = "blue";
+                g.font = "italic 100px cursive";
+                g.fillText("START: " + pauseTime, 20, canvas.height / 2); // renders text on top of it
+                pauseTime--; //decrements the amount of time until pause ends
+
+
+
+                if (pauseTime < 0) { //when reaches 0 all of the values are reset and pause if turned off
+                    pause = false;
+                    pauseTime = 3;
+                    clearInterval(countDownPause);
+                    countDownPause = null;
+                    // runs the finction to create the objects 
+                    startCheckingFPSTimer();
+                    startCreatingObjectsTimer();
+
+                    renderCanvas();//renders canvas do it starts requestAnimationFrame()
+                }
+            }
+
+            function countDownPauseTimer() {
+                if (countDownPause === null)
+                {
+                    countDownPause = setInterval(drawPauseCountDown, 1000); //interval for the countdown
+                }
+            }
+
+            function checkFPS() {
+                framesPerSecond = timestampArray.length;//gets the amount of times the canvas rendered in a second
+                timestampArray = new Array();//cleans the array for the next iteration of the interval
+            }
+
+            function startCheckingFPSTimer() {
+                if (startCheckingFPS === null)
+                {
+                    startCheckingFPS = setInterval(checkFPS, 1000); //1 second interval to calculate the FPS
+                }
+            }
+
+            function checkIfMouseOver(X, Y) // checks if the mouse is over the player and returns a true or false value
+            {
+                if (X < player.getX() || Y < player.getY() || X > player.getX() + player.getWidth() || Y > player.getY() + player.getHeight()) {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+            function createObject() // creates objects and stores them in an array untial a certain amount of points is reached
+            {
+                x = getRandomNumber(100, 400);// random number for possition of the falling object
+                num = getRandomNumber(1, 10); // gets a random number between 1 and 10
+                
+                if (coin && num === 1) { // if coin is true and number = 1 sets object to have the coin sprite and the objects coin attribute to true
+                    object.push(new Object(false, true, x, coinSprite));
+                }
+                else if (bomb && num === 2) {// if bobm is true and number = 2 sets object to have the bomb sprite and the objects bomb attribute to true
+                    object.push(new Object(true, false, x, bombSprite));
+                }
+                else { // sets sets a random fruit sprite but not the same as the previous one 
+                    while (sprite === lastSprite) {
+                        sprite = chooseSprite();
+                    }
+                    lastSprite = sprite;
+                    object.push(new Object(false, false, x, sprite));
+                }
+
+                if (player.getPoints() >= pointsToWin) {// resets interval if points are reached and pauses the game
+                    object = new Array();
+                    clearInterval(startCreatingObjects);
+                    startCreatingObjects = null;
+                    pause = true;
+                    menu = true;// turns on the menu
+                    currentLevel++;// increments the level
+                    if (levelArray.length <= currentLevel) {// if there is no more levels in the array triggers the win condition
+                        winMenu = true;
+                    }
+                    else {// otherwise turns on the next level
+                        levelMenu = true;
+                    }
+                }
+            }
+
+            function startCreatingObjectsTimer()
+            {
+                if (startCreatingObjects === null)
+                {
+                    startCreatingObjects = setInterval(createObject, fallingSpeed); //starts interval for the falling objects
+                }
+            }
+
+            function Player() { // creates a player object
+                //objects variables
+                var idleSprite = charIdle;
+                var movingSpritesL = [charRun1, charRun2, charRun3];
+                var movingSpritesR = [charRun1R, charRun2R, charRun3R];
+                var currentSprite = charIdle;
+                var nextSpriteId = 0;
+                var health = 5;
+                var heartSpr = heartSprite;
+                var width = 90;
+                var height = 90;
+                var x = 250;
+                var y = CANVAS_HEIGHT - height - 10;
+                var speed = 15;
+                var points = 0;
+                var destroyedState = false;
+
+                //objects public methods including getters and setters for values
+                this.draw = draw;
+                function draw()
+                {
+                    g.drawImage(currentSprite, x, y, width, height);// draws the sprite
+                    
+                    if (heart) { // draws the hearts and points if hearts are true
+                        for (i = 0; i < health; i++) {
+                            g.drawImage(heartSpr, 10 + (35 * i), 2, 35, 35);
+                        }
+                        g.fillStyle = "blue";
+                        g.font = "italic 20px cursive";
+                        g.fillText("Hearts: " + health, 10, 55);
+                        g.fillText("Points: " + points, 10, 80);
+
+                        if (health === 0) {
+                            menu = true;
+                            looseMenu = true;
+                        }
+                    }
+                    else { // draws points
+                        g.fillStyle = "blue";
+                        g.font = "italic 20px cursive";
+                        g.fillText("Points: " + points, 10, 25);
+                    }
+                }
+
+                this.isDestroyed = isDestroyed;
+                function isDestroyed()
+                {
+                    return destroyedState;
+                }
+
+                this.setX = setX;
+                function setX(newX)
+                {
+                    x = newX;
+                }
+
+                this.setY = setY;
+                function setY(newY)
+                {
+                    y = newY;
+                }
+
+                this.setCurrentSprite = setCurrentSprite;
+                function setCurrentSprite(newCurrentSprite)// sets new sprite and increments the number for the sprite animation
+                {
+                    currentSprite = newCurrentSprite;
+                    increaseSpriteId();
+                }
+
+                this.getHearts = getHearts;
+                function getHearts()
+                {
+                    return health;
+                }
+
+                this.setHearts = setHearts;
+                function setHearts(newHealth)
+                {
+                    health = newHealth;
+                }
+
+                this.getX = getX;
+                function getX()
+                {
+                    return x;
+                }
+
+                this.getY = getY;
+                function getY()
+                {
+                    return y;
+                }
+
+                this.getWidth = getWidth;
+                function getWidth()
+                {
+                    return width;
+                }
+
+                this.getHeight = getHeight;
+                function getHeight()
+                {
+                    return height;
+                }
+
+                this.getSpeed = getSpeed;
+                function getSpeed()
+                {
+                    return speed;
+                }
+
+                this.getPoints = getPoints;
+                function getPoints()
+                {
+                    return points;
+                }
+
+                this.setPoints = setPoints;
+                function setPoints(num)// sets the points if number is undefined adds 100
+                {
+                    if (num === undefined)
+                    {
+                        points += 100;
+                    }
+                    else {
+                        points = num;
+                    }
+                }
+
+                this.getIdleSprite = getIdleSprite;
+                function getIdleSprite()
+                {
+                    return idleSprite;
+                }
+
+                this.getMovingSpritesL = getMovingSpritesL;
+                function getMovingSpritesL()
+                {
+                    return movingSpritesL;
+                }
+
+                this.getMovingSpritesR = getMovingSpritesR;
+                function getMovingSpritesR()
+                {
+                    return movingSpritesR;
+                }
+
+                this.increaseSpriteId = increaseSpriteId;
+                function increaseSpriteId() {
+                    nextSpriteId++;
+
+                }
+
+                this.getNextSpriteId = getNextSpriteId;
+                function getNextSpriteId() // if the is is more then the amount of sprites for animation or the sprite is idle then it is set to 0 (first position in array)
+                {
+                    if (nextSpriteId === 2 || currentSprite === idleSprite)
+                    {
+                        nextSpriteId = 0;
+                    }
+                    return nextSpriteId;
+                }
+
+                this.isHit = isHit;
+                function isHit(i)
+                {
+                    if (object[i] !== undefined && object[i] !== null)
+                    {
+                        //checks if object touches the player
+                        if (((object[i].getX() + object[i].getWidth() / 2) - 10 >= player.getX())
+                                && ((object[i].getX() + object[i].getWidth() / 2) + 10 <= (player.getX() + player.getWidth()))
+                                && ((object[i].getY() + object[i].getHeight() / 2) - 10 >= player.getY())
+                                && ((object[i].getY() + object[i].getHeight() / 2) + 10 <= (player.getY() + player.getHeight())))
+                        {
+                            if (!object[i].getBomb()) { // checks it the object is a bomb
+                                if (object[i].getCoin()) { // checks if the object is a coin and if it is adds a 1000 points to the players score
+                                    player.setPoints(player.getPoints() + 1000); 
+                                }
+                                else {
+                                    player.setPoints();
+                                }
+                                object[i].destroy(i); // if the player touches the object the object is then destroyed
+                            }
+                            else {
+                                player.setHearts(0); // if the object is a bomb the player instantly dies
+                            }
+                            return true;
+                        }
+                        return false;
+                    }
+                    return false;
+                }
+            }
+
+            function Object(bomb, coin, x, sprite) // object for the falling objects
+            {
+                // private object variables
+                var width = 35;
+                var height = 35;
+                var bomb = bomb;
+                var coin = coin;
+                var x = x;
+                var y = -50;
+                var sprite = sprite;
+                var speed = 10; // number in range of 1 to 100, where 100 is fastest  
+                var interval = setInterval(move, 100 / getSpeed());
+
+                // public methods 
+                this.move = move;
+                function move()
+                {
+                    y++;//moves the object down the y axis
+                    for (var i = 0; i < object.length; i++) // checks if any object hits the player or goes past the canvas if yes the objects is destroyed
+                    {
+                        if (!player.isHit(i)) {
+                            if (object[i] !== null) {
+                                if (object[i].getY() >= 500) {
+                                    if (heart) {
+                                        if (!object[i].getBomb()) {
+                                            player.setHearts(player.getHearts() - 1);
+                                        }
+                                    }
+                                    object[i].destroy(i);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                this.destroy = destroy;
+                function destroy(i)
+                {
+                    object[i] = null;
+                }
+
+                this.draw = draw;
+                function draw()
+                {
+                    g.drawImage(sprite, x, y, width, height);
+                }
+
+                this.setFiringState = setFiringState;
+                function setFiringState(state)
+                {
+                    firingState = state;
+                }
+
+                this.isFiring = isFiring;
+                function isFiring()
+                {
+                    return firingState;
+                }
+
+                this.setX = setX;
+                function setX(newX)
+                {
+                    x = newX;
+                }
+
+                this.getX = getX;
+                function getX()
+                {
+                    return x;
+                }
+
+                this.getY = getY;
+                function getY()
+                {
+                    return y;
+                }
+
+                this.getWidth = getWidth;
+                function getWidth()
+                {
+                    return width;
+                }
+
+                this.getHeight = getHeight;
+                function getHeight()
+                {
+                    return height;
+                }
+
+                this.getSprite = getSprite;
+                function getSprite()
+                {
+                    return sprite;
+                }
+
+                this.getBomb = getBomb;
+                function getBomb()
+                {
+                    return bomb;
+                }
+
+                this.getCoin = getCoin;
+                function getCoin()
+                {
+                    return coin;
+                }
+
+                this.getSpeed = getSpeed;
+                function getSpeed()
+                {
+                    return speed;
+                }
+
+                this.cInterval = cInterval;
+                function cInterval()
+                {
+                    clearInterval(interval);
+                }
+
+                this.startInterval = startInterval;
+                function startInterval()
+                {
+                    interval = setInterval(move, 100 / getSpeed());
+                }
+            }
+
+            function Level(image, bombStatus, coinStatus, heartStatus, objectFallingSpeedInSec, pointsToWin) { // object for creating levels
+                //objects variables
+                var levelMenu = image;
+                var bomb = bombStatus;
+                var coin = coinStatus;
+                var heart = heartStatus;
+                var objectFallingSpeed = objectFallingSpeedInSec * 1000;
+                var pointsToWin = pointsToWin;
+                
+                // getters and setters for the object
+                this.getLevelMenu = getLevelMenu;
+                function getLevelMenu()
+                {
+                    return levelMenu;
+                }
+
+                this.getBombStatus = getBombStatus;
+                function getBombStatus()
+                {
+                    return bomb;
+                }
+
+                this.getCoinStatus = getCoinStatus;
+                function getCoinStatus()
+                {
+                    return coin;
+                }
+
+                this.getHeartStatus = getHeartStatus;
+                function getHeartStatus()
+                {
+                    return heart;
+                }
+
+                this.getObjectFallingSpeed = getObjectFallingSpeed;
+                function getObjectFallingSpeed()
+                {
+                    return objectFallingSpeed;
+                }
+
+                this.getPointsToWin = getPointsToWin;
+                function getPointsToWin()
+                {
+                    return pointsToWin;
+                }
+            }
+
+            function chooseSprite() // chooses a random fruit sprite using a random number generator
+            {
+                var num = getRandomNumber(1, 9);
+                if (num === 1) {
+                    return fruit1;
+                }
+                else if (num === 2) {
+                    return fruit2;
+                }
+                else if (num === 3) {
+                    return fruit3;
+                }
+                else if (num === 4) {
+                    return fruit4;
+                }
+                else if (num === 5) {
+                    return fruit5;
+                }
+                else if (num === 6) {
+                    return fruit6;
+                }
+                else if (num === 7) {
+                    return fruit7;
+                }
+                else if (num === 8) {
+                    return fruit8;
+                }
+                else if (num === 9) {
+                    return fruit9;
+                }
+            }
+
+            function getRandomNumber(min, max) // random number generator between the min and max
+            {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+
+            function checkIfNewHighScore(newScore) {
+                var oldScore = document.getElementById("score").value; // gets old score 
+                if (oldScore !== null && oldScore !== undefined) {
+                    if (newScore > oldScore) { // checks if the new score is bigget then the old one
+                        document.getElementById("score").value = newScore; // if true sets score
+                        saveScore(newScore); // and saves in cookies
+                    }
+                }
+                else { // if no score is there sets score to new score
+                    document.getElementById("score").value = score;
+                }
+            }
+
+            //load and save functions were taken from http://gamedev.stackexchange.com/questions/47958/saving-scores-using-cookies
+            function saveScore(score) {
+                var date = new Date();
+                date.setMonth(date.getMonth() + 5);
+                var expires = "; expires=" + date.toGMTString();
+                document.cookie = "score=" + score + expires + "; path=/"; // creates a cookie with the score and an expiery date
+            }
+
+            function loadScore() {
+                var cookiearray = document.cookie.split(';'); // gets the cookie and splits it
+                for (var i = 0; i < cookiearray.length; i++) {
+                    var name = cookiearray[i].split('=')[0];
+                    var value = cookiearray[i].split('=')[1];
+                    if (name === "score") {
+                        document.getElementById("score").value = value; // returns the loaded value
+                    }
+                }
+            }
+        </script>
+    </head>
+
+    <body>
+        <canvas id = "canvas">
+            Your browser does not support the HTML5 'Canvas' tag.
+        </canvas>
+        <audio autoplay loop>
+            <source src="./sound/song.mp3" type="audio/mpeg">
+        </audio><!--http://freemusicarchive.org/search/?adv=1&mood=spiritual&quicksearch=&search-genre=&only-instrumental=1&duration_from=&duration_to=&tempo=3&music-filter-CC-attribution-only=on&music-filter-CC-attribution-sharealike=1&music-filter-CC-attribution-noncommercial=1&music-filter-CC-attribution-noncommercial-sharealike=1&music-filter-public-domain=1&music-filter-remix-allowed=1 -->
+    </body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>
+            function switchH(){
+                var data = document.getElementsByTagName('h1');
+                var length = document.getElementsByTagName('h1').length;
+                
+                var dataReverse = new Array();
+                
+                for(i=0; i<data.length;i++){
+                    dataReverse[i] = data[(length-1-i)].innerHTML;
+                }
+                
+                for(i=0; i<dataReverse.length;i++){
+                    document.getElementsByTagName('h1')[i].innerHTML = dataReverse[i];
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <p onclick="switchH()">Reverse contents</p>
+        
+        <h1>Hey</h1>
+        <h1>Hello</h1>
+        <h1>Anybody</h1>
+        <h1>There</h1>
+        
+        
+        <p>QUESTION 6: Create a website with a <.p> and four <.h1> tags so that when you move the mouse over the <.p> tag, the contents of the <.h1> tags are reversed (i.e. 1-->4, 2-->3, 3-->2, 4-->1)</p>
+    </body>
+</html>

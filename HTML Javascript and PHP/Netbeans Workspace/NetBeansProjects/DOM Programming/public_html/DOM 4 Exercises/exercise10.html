@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>
+            var colourR = 255;
+            var colourB = 0;
+            
+            function changeColour(){
+                //255 in 10sec
+                //25.5 in 1 sec
+                //2.55 in 1/10 sec = 100 milisec
+
+                if(colourR>0){
+                    colourR -= 2.55;
+                    colourB += 2.55;
+                    setTimeout('changeRBG()',100);
+                }
+                else{
+                    colourR = 255;
+                    colourB = 0;
+                }
+            }
+            function changeRBG(){
+                document.getElementById("p").style.color = "rgb("+parseInt(colourR)+", 0, "+parseInt(colourB)+")";
+                changeColour();
+            }
+        </script>
+    </head>
+    <body>
+        <p onclick="changeColour()" id="p">QUESTION 10: Create a website so that the first <.p> tag text changes colour from red to blue gradually over as close to 10 seconds as possible as the webpage loads (i.e. after 5 seconds the text colour should be purple). Keep green out of it!</p>
+    </body>
+</html>

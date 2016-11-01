@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>
+            var rotation = 0;
+            
+            function rotate(){
+                //360 in 6sec
+                //60 in 1 sec
+                //1 in .01666666 sec
+                //16.666666 milicecs
+
+                if(rotation<360){
+                    rotation++;
+                    var x = setTimeout(function(){by1Deg();},16.6666);
+                }
+                else{
+                    rotation = 0;
+                }
+            }
+            function by1Deg(){
+                document.getElementById("but").style.transform = "rotate("+rotation+"deg)";
+                rotate();
+            }
+        </script>
+    </head>
+    <body>
+        <button onclick="rotate()" id="but">Spin Spin</button>
+        <p>QUESTION 8: Create a website so that, when you click a button, the button will rotate through 360 degrees in as close to 6 seconds as possible.</p>
+    </body>
+</html>

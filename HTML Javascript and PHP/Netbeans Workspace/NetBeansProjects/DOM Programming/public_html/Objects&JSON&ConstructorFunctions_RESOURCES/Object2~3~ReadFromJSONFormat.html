@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		
+		<meta name="viewport" content="width-device-width,initial-scale=1.0" />
+		
+		<title>
+			JSON Example: READ FROM JSON
+		</title>
+		
+		<style type="text/css">
+			#firstP {
+				color: yellow;
+				background-color: blue
+			}
+
+			#secondP {
+				color: orange;
+				background-color: green
+			}
+		</style>
+		
+		<script>
+			// Creating a CONSTRUCTOR FUNCTION (parameters are the values our objects will have)
+			function CD(artist, title, price) {
+				this.artist = artist;
+				this.title = title;
+				this.price = price;
+			}
+			
+			function useJSON() {
+				// Creating a new OBJECT (a CD)
+				var newCD1 = new CD("Ed Sheeran", "Multiply (or X)", 12.99);
+				
+				// Converting the new object into JSON FORMAT and displaying on the webpage
+				var jsonString1 = JSON.stringify(newCD1);
+				document.getElementById( "firstP" ).innerHTML = jsonString1;
+				
+				// Getting information from the user to be used to create a second CD object
+				var artist2 = prompt("Another artist");
+				var title2 = prompt("Another title");
+				var price2 = prompt("Another price");
+				
+				// Creating a SECOND CD object from user data, and converting into JSON format ... LIKE "WRITING TO JSON"
+				var newCD2 = new CD(artist2, title2, price2);
+				var jsonString2 = JSON.stringify(newCD2);
+				document.getElementById( "secondP" ).innerHTML = jsonString2;
+
+				// Parsing the information from JSON ... LIKE "READING FROM JSON"
+				var jsonRecording1 = JSON.parse(jsonString1);
+				document.getElementById( "artistA").innerHTML = jsonRecording1.artist;
+				document.getElementById( "titleA").innerHTML = jsonRecording1.title;
+				document.getElementById( "priceA").innerHTML = jsonRecording1.price;
+				
+				var jsonRecording2 = JSON.parse(jsonString2);
+				document.getElementById( "artistB").innerHTML = jsonRecording2.artist;
+				document.getElementById( "titleB").innerHTML = jsonRecording2.title;
+				document.getElementById( "priceB").innerHTML = jsonRecording2.price;				
+			}
+		</script>
+	</head>
+	
+	<body onload="useJSON()">
+		<h1>
+			JSON Example
+		</h1>
+		
+		<p id="firstP"></p>
+
+		<p id="secondP"></p>
+		
+		<table border="10">
+			<tr>
+				<th>Artist</th>
+				<th>Title</th>
+				<th>Price</th>
+			</tr>
+			<tr>
+				<td id="artistA"></td>
+				<td id="titleA"></td>
+				<td id="priceA"></td>
+			</tr>
+			<tr>
+				<td id="artistB"></td>
+				<td id="titleB"></td>
+				<td id="priceB"></td>
+			</tr>
+		</table>
+		
+	</body>
+</html>

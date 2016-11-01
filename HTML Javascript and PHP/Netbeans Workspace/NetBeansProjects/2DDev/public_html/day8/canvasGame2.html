@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Worked example from lecture notes</title>
+        <style>
+            #canvas
+            {
+                border:1px solid black;
+                width:500px;
+                height:500px;
+            }
+
+            #loadingMessage
+            {
+                position:absolute;
+                top:100px;
+                left:100px;
+                z-index:100;
+                font-size:50px;
+            }
+        </style>
+
+        <script>
+            var TARGET_WIDTH = 100;
+            var CANVAS_WIDTH = 500;
+            var CANVAS_HEIGHT = 500;
+            var NUMBER_OF_TARGETS = 2; // the number of targets that the player has to hit
+
+            var canvas;
+            var g;
+            /* Variable to drive the game */
+            /* Bullet */
+            var numberOfBullets = 30; // maximum number of visible bullets on the screen at any time
+            var bullet = new Array(numberOfBullets);
+            /* Target */
+            var target = new Array();
+            var numberOfTargetsDestroyed = 0; // the number of targets that have been hit so far 
+            var allTargetsAreDestroyed = false; // set to true when all of the targets have been hit
+            for (var i = 0; i < NUMBER_OF_TARGETS; i++)
+            {
+                target[i] = new Target(Math.random() * (CANVAS_WIDTH - (TARGET_WIDTH / 2)), TARGET_WIDTH);
+            }
+
+            /* Bat */
+            var bat = new Bat();
+            var batIncreaseStepSize = 20; // the amount that the bat size increas by each time it is hit
+            var batIsDestroyed = false; // set to true if a bullet hits this bat
+
+
+            window.onload = onAllAssetsLoaded;
+            document.write("<div id='loadingMessage'>Loading...</div>");
+            function onAllAssetsLoaded()
+            {
+                // hide the webpage loading message
+                document.getElementById('loadingMessage').style.visibility = "hidden";
+                canvas = document.getElementById("canvas");
+                g = canvas.getContext("2d");
+                canvas.width = CANVAS_WIDTH;
+                canvas.height = CANVAS_HEIGHT;
+                renderCanvas();
+                document.addEventListener('keydown', keydownHandler);
+            }
+
+
+            var gameIsOver = false;
+            function renderCanvas()
+            {
+                /* Continuously call requestAnimationFrame() to keep rendering the canvas */
+                if (gameIsOver)
+                {
+                    return; // end recursion
+                }
+                else
+                {
+                    requestAnimationFrame(renderCanvas); // recursively call next frame
+                }
+
+                g.clearRect(0, 0, canvas.width, canvas.height);
+                if (allTargetsAreDestroyed === true)
+                {
+                    alert("You win!");
+                    //clearInterval(renderCanvasInterval);
+                    gameIsOver = true;
+                }
+                else if (batIsDestroyed === true)
+                {
+                    alert("You lose!");
+                    //clearInterval(renderCanvasInterval);
+                    gameIsOver = true;
+                }
+                else
+                {
+                    bat.draw();
+                    for (var i = 0; i < bullet.length; i++)
+                    {
+                        if (bullet[i] !== undefined)
+                        {
+                            bullet[i].draw();
+                        }
+                    }
+
+                    for (var i = 0; i < target.length; i++)
+                    {
+                        if (target[i] !== undefined)
+                        {
+                            target[i].draw();
+                        }
+                    }
+                }
+            }
+
+
+            /* Bullet Object */
+            function Bullet(batX, batY, batWidth, batHeight)
+            {
+                /* private member variables */
+                var firingState = true;
+                var bulletWidth = 10;
+                var bulletHeight = 10;
+                var x = batX + batWidth / 2;
+                var y = batY - batHeight;
+                var bulletColour = "red";
+                var speed = 100; // number in range of 1 to 100, where 100 is fastest  
+                var interval = setInterval(move, 100 / getSpeed());
+                var isMovingUp = true;
+                /* public methods */
+                this.move = move;
+                function move()
+                {
+                    if (isMovingUp)
+                    {
+                        y--;
+                        if (y <= 0)
+                        {
+                            isMovingUp = false;
+                            for (var i = 0; i < NUMBER_OF_TARGETS; i++)
+                            {
+                                target[i].isHit();
+                            }
+                        }
+                    }
+                    else  // moving down
+                    {
+                        y++;
+                        if (y >= canvas.height)
+                        {
+                            isMovingUp = true;
+                            bat.isHit();
+                        }
+                    }
+                }
+
+                this.destroy = destroy;
+                function destroy()
+                {
+                    clearInterval(interval);
+                    firingState = false;
+                }
+
+                this.draw = draw;
+                function draw()
+                {
+                    if (isFiring())
+                    {
+                        g.fillStyle = bulletColour;
+                        g.fillRect(x, y, bulletWidth, bulletHeight);
+                    }
+                }
+
+                this.setFiringState = setFiringState;
+                function setFiringState(state)
+                {
+                    firingState = state;
+                }
+
+                this.isFiring = isFiring;
+                function isFiring()
+                {
+                    return firingState;
+                }
+
+                this.setX = setX;
+                function setX(newX)
+                {
+                    x = newX;
+                }
+
+                this.getX = getX;
+                function getX()
+                {
+                    return x;
+                }
+
+                this.getY = getY;
+                function getY()
+                {
+                    return y;
+                }
+
+                this.getSpeed = getSpeed;
+                function getSpeed()
+                {
+                    return speed;
+                }
+            }
+
+
+            /* Bat Object */
+            function Bat()
+            {
+                /* private member variables */
+                var batColour = "black";
+                var width = 100;
+                var height = 10;
+                var speed = 10; // number in range of 1 to 100, where 100 is fastest  
+                var destroyedState = false;
+                var x = 0;
+                var y = CANVAS_HEIGHT - height;
+                /* public methods */
+                this.draw = draw;
+                function draw()
+                {
+                    if (!isDestroyed())
+                    {
+
+                        g.fillStyle = batColour;
+                        g.fillRect(x, y, width, height);
+                    }
+                }
+
+                this.isDestroyed = isDestroyed;
+                function isDestroyed()
+                {
+                    return destroyedState;
+                }
+
+                this.setX = setX;
+                function setX(newX)
+                {
+                    x = newX;
+                }
+
+                this.setY = setY;
+                function setY(newY)
+                {
+                    y = newY;
+                }
+
+                this.getX = getX;
+                function getX()
+                {
+                    return x;
+                }
+
+                this.getY = getY;
+                function getY()
+                {
+                    return y;
+                }
+
+                this.getWidth = getWidth;
+                function getWidth()
+                {
+                    return width;
+                }
+
+                this.getHeight = getHeight;
+                function getHeight()
+                {
+                    return height;
+                }
+
+                this.getSpeed = getSpeed;
+                function getSpeed()
+                {
+                    return speed;
+                }
+
+                this.isHit = isHit;
+                function isHit()
+                {
+                    for (var i = 0; i < bullet.length; i++)
+                    {
+                        if (bullet[i] !== undefined)
+                        {
+                            if ((bullet[i].getX() >= x) && (bullet[i].getX() <= (x + width))
+                                    && (bullet[i].getY() >= y) && (bullet[i].getY() <= (y + height)))
+                            {
+                                destroyedState = true;
+                                for (var i = 0; i < bullet.length; i++)
+                                {
+                                    if (bullet[i] !== undefined)
+                                    {
+                                        bullet[i].destroy();
+                                    }
+                                }
+
+                                batIsDestroyed = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            /* Target Object */
+            function Target(newX, newWidth)
+            {
+                /* private member variables */
+                var x = newX;
+                var y = 0;
+                var width = newWidth;
+                var height = 10;
+                var destroyedState = false;
+                var targetColour = "green";
+                var devideCount = 0;
+                /* public methods */
+                this.draw = draw;
+                function draw()
+                {
+                    if (!isDestroyed())
+                    {
+                        g.fillStyle = targetColour;
+                        g.fillRect(x, y, width, height);
+                    }
+                }
+
+                this.isDestroyed = isDestroyed;
+                function isDestroyed()
+                {
+                    return destroyedState;
+                }
+                this.isHit = isHit;
+                function isHit()
+                {
+                    if (isDestroyed())
+                    {
+                        return;
+                    }
+                    for (var i = 0; i < bullet.length; i++)
+                    {
+                        if (bullet[i] !== undefined)
+                        {
+                            if ((bullet[i].getX() >= x) && (bullet[i].getX() <= (x + width))
+                                    && (bullet[i].getY() >= y) && (bullet[i].getY() <= (y + height)))
+                            {
+                                if (devideCount!==3) {
+                                    devideCount++;
+                                    bullet[i].destroy();
+                                    width = width/2;
+                                    x = randomXGenerator(width);
+                                }
+                                else {
+                                    destroyedState = true;
+                                    bullet[i].destroy();
+                                    numberOfTargetsDestroyed++;
+                                    if (numberOfTargetsDestroyed === NUMBER_OF_TARGETS)
+                                    {
+                                        allTargetsAreDestroyed = true;
+                                    }
+                                    return true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    return false;
+                }
+            }
+
+
+            /* Keyboard */
+            function keydownHandler(e)
+            {
+                if (e.keyCode === 37)  // left
+                {
+                    bat.setX(bat.getX() - bat.getSpeed());
+                }
+                else if (e.keyCode === 39) // right
+                {
+                    bat.setX(bat.getX() + bat.getSpeed());
+                }
+                else if (e.keyCode === 32) // space
+                {
+
+                    for (var i = 0; i < bullet.length; i++)
+                    {
+                        if ((bullet[i] === undefined) || (!bullet[i].isFiring()))
+                        {
+                            bullet[i] = new Bullet(bat.getX(), bat.getY(), bat.getWidth(), bat.getHeight());
+                            break;
+                        }
+                    }
+                }
+            }
+            function randomXGenerator(width){
+                return Math.floor((Math.random() * CANVAS_WIDTH-width) + 0);
+            }
+        </script>
+    </head>
+
+    <body>
+        <canvas id = "canvas" tabindex="1">
+            Your browser does not support the HTML5 'Canvas' tag.
+        </canvas>
+        <p>Use the left and right arrow keys to move the bat. Use the space bar to fire a bullet. </p>
+    </body>
+</html> 

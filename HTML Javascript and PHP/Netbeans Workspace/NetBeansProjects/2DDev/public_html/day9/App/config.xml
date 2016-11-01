@@ -1,0 +1,11 @@
+<widget xmlns = "http://www.w3.org/ns/widgets"
+        xmlns:gap = "http://phonegap.com/ns/1.0"
+        id = "ie.Dkiller2204.myAppID"
+		version = "1.0.0">
+
+<name>Game</name>
+<description>A minimal phonegap demo that includes a unique id</description>
+
+</widget>
+
+

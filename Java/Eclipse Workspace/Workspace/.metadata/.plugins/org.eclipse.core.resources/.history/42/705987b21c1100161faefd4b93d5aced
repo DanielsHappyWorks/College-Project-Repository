@@ -1,0 +1,197 @@
+package Test;
+
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import Controller.ShowManager;
+import Model.Show;
+import Utility.FileUtility;
+import View.MainApp;
+
+public class testCases {
+
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+	}
+
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+	}
+
+	@Before
+	public void setUp() throws Exception {
+	}
+
+	@After
+	public void tearDown() throws Exception {
+	}
+
+	@Test
+	public void testCreate() {
+		// create first
+		String path = "";
+		String name = "test1.txt";
+		boolean create = FileUtility.create(path, name);
+		assertEquals(create, true);
+		
+		FileUtility.delete(path, name);
+	}
+
+	@Test
+	public void testCreate_NotFound() {
+		// try creating something with no name or path
+		String path = "";
+		String name = "";
+		boolean create = FileUtility.create(path, name);
+		assertEquals(create, false);
+	}
+
+	@Test
+	public void testCreateUnique() {
+		// create first
+		String path = "";
+		String name = "test1.txt";
+		boolean create = FileUtility.create(path, name);
+		assertEquals(create, true);
+
+		// try creating again but already exists
+		String path2 = "";
+		String name2 = "test1.txt";
+		boolean create2 = FileUtility.create(path2, name2);
+		assertEquals(create2, false);
+		
+		FileUtility.delete(path, name);
+	}
+
+	@Test
+	public void testOpen() {
+		String path = "";
+		String name = "test1.txt";
+		boolean create = FileUtility.create(path, name);
+		assertEquals(create, true);
+		
+		boolean open = FileUtility.open(path, name, "rw");
+		assertEquals(open, true);
+		
+		FileUtility.delete(path, name);
+	}
+
+	@Test
+	public void testOpen_NotFound() {
+		String path = "";
+		String name = "test1.txt";
+		
+		boolean open = FileUtility.open(path, name, "rw");
+		assertEquals(open, false);
+	}
+
+	@Test
+	public void testDelete() {
+		String path = "";
+		String name = "test1.txt";
+		boolean create = FileUtility.create(path, name);
+		assertEquals(create, true);
+		
+		boolean delete = FileUtility.delete(path, name);
+		assertEquals(delete, true);
+	}
+
+	@Test
+	public void testDelete_NotFound() {
+		String path = "";
+		String name = "test1.txt";
+		
+		boolean delete = FileUtility.delete(path, name);
+		assertEquals(delete, false);
+	}
+
+	@Test
+	public void testAdd() {
+		Show show;
+		String path = "";
+		String name = "test1.txt";
+		FileUtility.delete(path, name);
+		boolean create = FileUtility.create(path, name);
+		assertEquals(create, true);
+		
+		boolean open = FileUtility.open(path, name, "rw");
+		assertEquals(open, true);
+		
+		show = new Show("The End", "Daniel", "Action", 1.99, 1, 5);
+		MainApp.manager.open();
+		boolean write =MainApp.manager.write(show);
+		MainApp.manager.close();
+		assertEquals(write, true);
+	}
+
+	@Test
+	public void testAddUnique() {
+		Show show;
+		String path = "";
+		String name = "test1.txt";
+		FileUtility.delete(path, name);
+		boolean create = FileUtility.create(path, name);
+		assertEquals(create, true);
+		
+		boolean open = FileUtility.open(path, name, "rw");
+		assertEquals(open, true);
+		
+		show = new Show("The End", "Daniel", "Action", 1.99, 1, 5);
+		MainApp.manager.open();
+		boolean write =MainApp.manager.write(show);
+		boolean write1 =MainApp.manager.write(show);
+		MainApp.manager.close();
+		assertEquals(write, true);
+		assertEquals(write1, false);
+	}
+
+	@Test
+	public void testEdit() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testEdit_NotFound() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSearchByCriteria() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testSearchByCriteria_NotFound() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testDelete2() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testDelete_NotFound2() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testDeleteAll() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testShowAll() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void testShowAll_NoData() {
+		fail("Not yet implemented");
+	}
+}

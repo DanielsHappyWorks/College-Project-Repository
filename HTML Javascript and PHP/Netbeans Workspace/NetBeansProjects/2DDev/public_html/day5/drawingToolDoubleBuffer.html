@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Worked example from lecture notes</title>
+        <style>
+            #canvas
+            {
+                border:1px solid black;
+                width:500px;
+                height:500px;
+            }
+
+            #canvas:hover
+            {
+                //cursor:url(images/paint_brush.png) 6 30, auto;
+            }
+
+            #loadingMessage
+            {
+                position:absolute;
+                top:100px;
+                left:100px;
+                z-index:100;
+                font-size:50px;
+            }
+        </style>
+
+        <script>
+            var CANVAS_WIDTH = 500;
+            var CANVAS_HEIGHT = 500;
+
+            var radius = 10;
+            var canvas;
+            var g;
+            var image1 = new Image();
+            image1.src = "images/1.jpg";
+            var image2 = new Image();
+            image2.src = "images/dkit02.gif";
+
+            var imageUsed = new Image();
+            imageUsed = image1;
+
+            window.onload = onAllAssetsLoaded;
+            document.write("<div id='loadingMessage'>Loading...</div>");
+            function onAllAssetsLoaded()
+            {
+                // hide the webpage loading message
+                document.getElementById('loadingMessage').style.visibility = "hidden";
+
+                canvas = document.getElementById("canvas");
+                g = canvas.getContext("2d");
+                canvas.width = CANVAS_WIDTH;
+                canvas.height = CANVAS_HEIGHT;
+
+                imageCanvas = document.createElement('canvas');
+                imageCanvasG = imageCanvas.getContext('2d');
+                imageCanvas.width = CANVAS_WIDTH;
+                imageCanvas.height = CANVAS_HEIGHT;
+
+                scribbleCanvas = document.createElement('canvas');
+                scribbleCanvasG = scribbleCanvas.getContext('2d');
+                scribbleCanvas.width = CANVAS_WIDTH;
+                scribbleCanvas.height = CANVAS_HEIGHT;
+
+                scribbleCanvasG.fillStyle = "red";
+                document.getElementById("colourPicker").value = "#ff0000";
+
+                setBackgroundImage(image1);
+
+                canvas.addEventListener('mousemove', mousemoveHandler);
+            }
+
+            function renderCanvas() {
+                g.drawImage(imageCanvas, 0, 0, imageCanvas.width, imageCanvas.height);
+                g.drawImage(scribbleCanvas, 0, 0, scribbleCanvas.width, scribbleCanvas.height);
+            }
+
+            function mousemoveHandler(e)
+            {
+                if (e.which === 1)  // left mouse button
+                {
+                    scribbleCanvasG.beginPath();
+                    scribbleCanvasG.arc(e.x, e.y, radius, 0, Math.PI * 2);
+                    scribbleCanvasG.fill();
+                    scribbleCanvasG.closePath();
+                }
+                renderCanvas();
+            }
+
+
+            function clearScreen()
+            {
+                scribbleCanvasG.clearRect(0, 0, scribbleCanvas.width, scribbleCanvas.height);
+                renderCanvas();
+            }
+
+
+            function color(newColor)
+            {
+                scribbleCanvasG.fillStyle = newColor;
+            }
+
+
+            function radiusSize(newRadius)
+            {
+                radius = newRadius;
+            }
+
+
+            function setBackgroundImage(image)
+            {
+                imageCanvasG.drawImage(image, 0, 0, 500, 500);
+                renderCanvas();
+            }
+        </script>
+
+    </head>
+    <body>
+        <div>
+            <canvas id = "canvas">
+                Your browser does not support the HTML5 'Canvas' tag.
+            </canvas>
+        </div>
+        <input type="button" value="Clear Screen" onClick="clearScreen()"><br>
+        <input type="button" value="Background Image 1" onClick="setBackgroundImage(image1)">
+        <input type="button" value="Background Image 2" onClick="setBackgroundImage(image2)"><br>
+        <input type="color" id="colourPicker" onchange="color(this.value)"><br>
+        <input type="button" value="Thin" onClick="radiusSize(10);
+                document.getElementById('brushThicknessSlider').value = 10">
+        <input type="button" value="Thick" onClick="radiusSize(50);
+                document.getElementById('brushThicknessSlider').value = 50">
+        <input type="range" id="brushThicknessSlider" min="1" max="100" value="10" onchange="radiusSize(this.value)">
+    </body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Contact Us</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/png" href="../images/logo.png">
+        <link href = "../css/my_css.css" rel = "stylesheet" type = "text/css">
+        <script src="../javascript/javascript.js"></script>
+    </head>
+    
+    
+    <body>
+            <div class="container" id="container_home">
+                <div class="top">
+                    <header>
+                        <!--logo-->
+                        <div class="logo">
+                            <img src="../images/logo.png" class="logo_img" alt="logo">
+                        </div>
+                
+                        <!--banner-->
+                        <div class="banner">
+                            <img src="../images/banners/home_banner.png" alt="home banner" id="home_banner">
+                        </div>
+                    </header>
+            
+                    <!--Menu-->
+                    <nav class="horizontal_menu">
+                        <ul>
+                            <li><a href = "../home/home.html"><img src="../images/main_menu/home.png" alt="home" ></a></li>
+                            <li><a href = "../about_us/about_us.html"><img src="../images/main_menu/about_us.png" alt="about us"></a></li>
+                            <li><a href = "../contact_us/contact_us.html"><img src="../images/main_menu/contact_us.png" alt="contact us"></a></li>
+                            <li><span><img src="../images/main_menu/games.png" alt="Games" ></span>
+                                <ul>
+                                    <li><a href="../final_fantasy/final_fantasy.html"><img src="../images/side_menu/final_fantasy.png" alt="Final Fantasy"></a></li>
+                                    <li><a href="../kingdom_hearts/kingdom_hearts.html"><img src="../images/side_menu/kingdom_hearts.png" alt="Kingdom Hearts"></a></li>
+                                    <li><a href="../dragon_quest/dragon_quest.html"><img src="../images/side_menu/dragon_quest.png" alt="Dragon Quest"></a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            
+            
+                <div class="middle">
+                    <main class="main" id="main_home">
+                        <div class="heading">
+                            <h1>Contact Us</h1>
+                        </div>
+                        <div class="main_text">
+                            <form action="./contact_us.php" method="post">
+                                <label for="name">Name:</label><br>
+                                <input name="name" id="name" type="text"><br>
+                                <label for="email">E-mail:</label><br>
+                                <input name="email" id="email" type="email"><br>
+                                <label for="message">Message:</label><br>
+                                <textarea name="message" id="message"></textarea><br>
+                                <button type="reset">reset</button>
+                                <button type="submit">submit</button>
+                            </form>
+                        </div>
+                        
+                        <div class="main_right">
+                            <div>
+                                <img src="../images/random_page.png" alt="Random Page" id="random" onclick="redirect()">
+                            </div>
+                            
+                            <div>
+                                <img src="../images/search.png" alt="Search" id="search">
+                                <div class="search_page">
+                                    <form name="theForm">
+                                        <input type="text" id="value" name="box1"><br>
+                                        <div id="search_button"><button onclick="search()">Search</button><div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            
+                <div class="footer" id="footer_home">
+                    <!--footer at the bottom-->
+                    <footer>
+                        <div class="facebook">
+                        <iframe src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2FDkiller2204&amp;width&amp;layout=button&amp;action=like&amp;show_faces=true&amp;share=true&amp;height=80" scrolling="no" frameborder="0" style="border:none; overflow:hidden; height:80px;" allowTransparency="true"></iframe>
+                        </div>
+                        
+                        <div class="copyright"><p>Copyright © Square Enix</p></div>
+                    </footer>
+                </div>
+            </div>
+    </body>
+</html>

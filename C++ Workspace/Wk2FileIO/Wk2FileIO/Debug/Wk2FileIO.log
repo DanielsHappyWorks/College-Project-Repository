@@ -1,0 +1,7 @@
+﻿  Main.cpp
+c:\users\dkill\desktop\c++\wk2fileio\wk2fileio\main.cpp(68): error C2059: syntax error: '='
+c:\users\dkill\desktop\c++\wk2fileio\wk2fileio\main.cpp(68): error C2143: syntax error: missing ';' before '{'
+c:\users\dkill\desktop\c++\wk2fileio\wk2fileio\main.cpp(71): error C2181: illegal else without matching if
+c:\users\dkill\desktop\c++\wk2fileio\wk2fileio\main.cpp(71): error C2059: syntax error: '='
+c:\users\dkill\desktop\c++\wk2fileio\wk2fileio\main.cpp(71): error C2143: syntax error: missing ';' before '{'
+c:\users\dkill\desktop\c++\wk2fileio\wk2fileio\main.cpp(74): error C2181: illegal else without matching if

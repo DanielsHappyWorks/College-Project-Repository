@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Worked example from lecture notes</title>
+<style>
+#canvas
+{
+    border:1px solid black;
+    width:500px;
+    height:500px;
+}
+
+#loadingMessage
+{
+    position:absolute;
+    top:100px;
+    left:100px;
+    z-index:100;
+    font-size:50px;
+}
+</style>
+
+<script>
+var CANVAS_WIDTH = 500;
+var CANVAS_HEIGHT = 500;
+
+var canvas;
+var g;
+
+window.onload = onAllAssetsLoaded;
+document.write("<div id='loadingMessage'>Loading...</div>");
+function onAllAssetsLoaded()
+{
+    // hide the webpage loading message
+    document.getElementById('loadingMessage').style.visibility = "hidden";
+
+    canvas = document.getElementById("canvas");
+    g = canvas.getContext("2d");
+    canvas.width = CANVAS_WIDTH;
+    canvas.height = CANVAS_HEIGHT;
+
+    renderCanvas();
+}
+
+
+function renderCanvas()
+{
+    /* Red Circle */
+    g.beginPath();
+    g.fillStyle = "red";
+    g.arc(100, 100, 50, 0, Math.radians(360));
+    g.fill();
+    g.closePath();
+
+    /* Semi-circle and two circle quadrants */
+    g.beginPath();
+    g.fillStyle = "red";
+    g.arc(300, 100, 50, 0, Math.radians(180));
+    g.fill();
+    g.closePath();
+
+    g.beginPath();
+    g.fillStyle = "yellow";
+    g.arc(300, 100, 50, 0, Math.radians(270), true);
+    g.lineTo(300, 100);
+    g.fill();
+    g.closePath();
+
+    g.beginPath();
+    g.fillStyle = "blue";
+    g.arc(300, 100, 50, Math.radians(270), Math.radians(180), true);
+    g.lineTo(300, 100);
+    g.fill();
+    g.closePath();
+}
+
+
+Math.radians = function (degrees)
+{
+    /* Convert from degrees to radians */
+    return degrees * Math.PI / 180;
+};
+
+
+Math.degrees = function (radians)
+{
+    /*  Convert from radians to degrees */
+    return radians * 180 / Math.PI;
+};
+</script>
+</head>
+<body>
+
+<canvas id = "canvas">
+Your browser does not support the HTML5 'Canvas' tag.
+</canvas>
+</body>
+</html> 

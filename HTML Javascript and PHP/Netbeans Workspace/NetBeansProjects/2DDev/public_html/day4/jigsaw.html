@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Worked example from lecture notes</title>
+<style>
+#keyboardCanvas
+{
+    border:1px solid black;
+    width:500px;
+    height:500px;
+}
+
+#loadingMessage
+{
+    position:absolute;
+    top:100px;
+    left:100px;
+    z-index:100;
+    font-size:50px;
+}
+</style>
+
+<script>
+var CANVAS_WIDTH = 500;
+var CANVAS_HEIGHT = 500;
+
+var canvas;
+var g;
+var size = 100;
+var choice,first=0;
+var snapX=97,snapY=200;
+var locked = false;
+var offX,offY;
+var released,inside;
+
+var imgBackground = new Image();
+imgBackground.src = "images/bck.jpg";
+var img1 = new Image();
+img1.src = "images/j1.png";
+var img2 = new Image();
+img2.src = "images/j2.png";
+var img3 = new Image();
+img3.src = "images/j3.png";
+var img4 = new Image();
+img4.src = "images/j4.png";
+var img5 = new Image();
+img5.src = "images/j5.png";
+
+var imgA = [img1,img2,img3,img4,img5];
+var xA = [10,100,200,300,250];
+var yA = [30,300,100,60,200];
+var lA = ["M","O","U","S","E"];
+var snapedA = [false,false,false,false,false];
+
+window.onload = onAllAssetsLoaded;
+document.write("<div id='loadingMessage'>Loading...</div>");
+function onAllAssetsLoaded()
+{
+    // hide the webpage loading message
+    document.getElementById('loadingMessage').style.visibility = "hidden";
+
+    canvas = document.getElementById("keyboardCanvas");
+    g = canvas.getContext("2d");
+    canvas.width = CANVAS_WIDTH;
+    canvas.height = CANVAS_HEIGHT;
+
+    renderCanvas();
+
+    canvas.addEventListener('mousemove', mousemoveHandler);
+    canvas.addEventListener('mousedown', mousedownHandler);
+}
+
+
+function renderCanvas()
+{   
+    g.drawImage(imgBackground, 0, 0, canvas.width, canvas.height);
+    
+    g.drawImage(img3, 20, 200, size, size);
+    
+    for(i=0;i<imgA.length;i++){
+        
+        g.drawImage(imgA[i], xA[i], yA[i], size, size);
+        
+        g.beginPath();
+        g.font = "50px Arial";
+        g.fillStyle = "black";
+        g.fillText(lA[i], xA[i]+25, yA[i]+67);
+        g.closePath();
+    }
+    
+    if(allSnaped()){
+        g.beginPath();
+        g.font = "50px Arial";
+        g.fillStyle = "blue";
+        g.fillText("You Win", 50, 400);
+        g.closePath();
+    }
+}
+function mousedownHandler(e)
+{
+    inside = checkIfCursorInside(e.x,e.y);
+}
+function mousemoveHandler(e)
+{
+    if(locked===false){
+        getChoice(e.x,e.y);
+        //inside = checkIfCursorInside(e.x,e.y);
+        offX=e.x-xA[choice];
+        offY=e.y-yA[choice];
+        locked = true;
+        released = false;
+    }
+    else{
+        if (e.which === 1 && inside === true && released===false && snapedA[choice]===false){
+            xA[choice] = e.x - offX;
+            yA[choice] = e.y - offY;
+            checkReleased(e.x,e.y);
+            snapIntoPlace(e.x,e.y);
+            renderCanvas();
+        }
+        else{
+            released=true;
+            locked=false;
+        }
+    }
+}
+function checkReleased(X,Y)
+{
+    var newOffX = X-xA[choice];
+    var newOffY = Y-yA[choice];
+    
+    if(offX !== newOffX || offY !== newOffY){
+        released===true;
+    }
+    else{
+        released===false;
+    }
+}
+function getChoice(X,Y)
+{
+    for(j=0;j<imgA.length;j++){
+        if(X>=xA[j] && Y>=yA[j] && X<=xA[j]+size && Y<=yA[j]+size){
+            choice = j;
+        }
+    }
+}
+function checkIfCursorInside(X,Y){
+        if(X>xA[choice] && Y>yA[choice] && X<xA[choice]+size && Y<yA[choice]+size){
+            return true;
+        }
+        else{
+            locked=false;
+            return false;
+        }
+}
+function snapIntoPlace()
+{
+    if((snapX-10)<=xA[choice] && (snapX+10)>=xA[choice] && (snapY-10)<=yA[choice] && (snapY+10)>=yA[choice] && choice===first){
+        snapedA[choice]=true;
+        xA[choice]=snapX;
+        yA[choice]=snapY;
+        first++;
+        snapX+= 76;
+        renderCanvas();
+    }
+}
+function allSnaped(){
+    if(snapedA[snapedA.length-1]===true){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+</script>
+</head>
+
+<body>
+<canvas id = "keyboardCanvas" tabindex="1">
+Your browser does not support the HTML5 'Canvas' tag.
+</canvas>
+<p>Move the pieces to spell mouse</p>
+</body>
+</html> 

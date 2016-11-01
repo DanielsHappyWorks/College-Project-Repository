@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Worked example from lecture notes</title>
+<style>
+#canvas
+{
+    border:1px solid black;
+    width:500px;
+    height:500px;
+}
+
+#loadingMessage
+{
+    position:absolute;
+    top:100px;
+    left:100px;
+    z-index:100;
+    font-size:50px;
+}
+</style>
+
+<script>
+var CANVAS_WIDTH = 500;
+var CANVAS_HEIGHT = 500;
+
+var canvas;
+var g;
+var img = new Image();
+img.src = "images/1.jpg";
+
+
+window.onload = onAllAssetsLoaded;
+document.write("<div id='loadingMessage'>Loading...</div>");
+function onAllAssetsLoaded()
+{
+    // hide the webpage loading message
+    document.getElementById('loadingMessage').style.visibility = "hidden";
+
+    canvas = document.getElementById("canvas");
+    g = canvas.getContext("2d");
+    canvas.width = CANVAS_WIDTH;
+    canvas.height = CANVAS_HEIGHT;
+
+    renderCanvas();
+}
+
+
+function renderCanvas()
+{
+    g.drawImage(img, 0, 0, canvas.width, canvas.height);
+    
+    g.save(); // remember the state of the canvas prior to the rotation
+
+    // rotate around the centre of the canvas
+    g.translate(canvas.width / 2, canvas.height / 2);
+    g.rotate(Math.radians(45));
+    g.translate(-canvas.width / 2, -canvas.height / 2);
+    
+    g.beginPath();
+    g.font = "50px Times Roman";
+    g.strokeStyle = "white";
+    g.lineWidth = 3;
+    g.strokeText("Copyright @ dkit.ie", 40, canvas.height-220);
+    g.closePath();
+    
+    
+
+    g.restore(); // restore the canvas to its state prior to the rotation
+   
+}
+
+
+// Convert from degrees to radians.
+Math.radians = function (degrees)
+{
+    return degrees * Math.PI / 180;
+};
+
+
+// Convert from radians to degrees.
+Math.degrees = function (radians)
+{
+    return radians * 180 / Math.PI;
+};
+</script>
+</head>
+<body>
+<canvas id = "canvas">
+Your browser does not support the HTML5 'Canvas' tag.
+</canvas>
+</body>
+</html>

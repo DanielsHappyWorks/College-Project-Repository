@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Worked example from lecture notes</title>
+<style>
+#keyboardCanvas
+{
+    border:1px solid black;
+    width:500px;
+    height:500px;
+}
+
+#loadingMessage
+{
+    position:absolute;
+    top:100px;
+    left:100px;
+    z-index:100;
+    font-size:50px;
+}
+</style>
+
+<script>
+var CANVAS_WIDTH = 500;
+var CANVAS_HEIGHT = 500;
+
+var canvas;
+var g;
+var x = 0;
+var y = 0;
+
+var img = new Image();
+img.src = "images/1.jpg";
+
+
+window.onload = onAllAssetsLoaded;
+document.write("<div id='loadingMessage'>Loading...</div>");
+function onAllAssetsLoaded()
+{
+    // hide the webpage loading message
+    document.getElementById('loadingMessage').style.visibility = "hidden";
+
+    canvas = document.getElementById("keyboardCanvas");
+    g = canvas.getContext("2d");
+    canvas.width = CANVAS_WIDTH;
+    canvas.height = CANVAS_HEIGHT;
+
+    renderCanvas();
+
+    //canvas.addEventListener('click', clickHandler);
+    //canvas.addEventListener('mousedown', mousedownHandler);
+    //canvas.addEventListener('mouseup', mouseupHandler);
+    canvas.addEventListener('mousemove', mousemoveHandler);
+}
+
+
+function renderCanvas()
+{
+    g.clearRect(0, 0, canvas.width, canvas.height);
+    //g.fillRect(x, y, 100, 100);
+    g.drawImage(img, x, y, 100, 100);
+}
+function mousemoveHandler(e)
+{
+    if (e.which === 1 && checkIfMouseOver(e.x,e.y) === true)
+    {
+        x = e.x - 50;
+        y = e.y - 50;
+        renderCanvas();
+    }
+}
+function checkIfMouseOver(X,Y)
+{
+    if(X<x || Y<y || X>x+100 || Y>y+100){
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+</script>
+</head>
+
+<body>
+<canvas id = "keyboardCanvas" tabindex="1">
+Your browser does not support the HTML5 'Canvas' tag.
+</canvas>
+<p>Click the mouse on the canvas to move the rectangle.</p>
+</body>
+</html> 

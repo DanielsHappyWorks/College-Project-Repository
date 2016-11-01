@@ -1,0 +1,26 @@
+<widget xmlns = "http://www.w3.org/ns/widgets"
+        xmlns:gap = "http://phonegap.com/ns/1.0"
+        id = "Daniel.Foth">
+
+<name>Fruit Fairy</name>
+<description>Game about catching falling fruit.</description>
+<author email="sorax2204@hotmail.com" href="https://www.facebook.com/daniel.foth1">Daniel Foth</author>
+
+<!-- Define app icon for each platform. -->
+<icon src="./images/char/idle2.png" /> <!-- note that the icon must be a .png -->
+
+<!-- different resolutions are supported for each make of phone -->
+<icon src="./images/char/idle2.png" gap:platform="android" gap:density="ldpi" />  <!-- low dpi -->
+<icon src="./images/char/idle2.png" gap:platform="android" gap:density="mdpi" />  <!-- medium dpi -->
+<icon src="./images/char/idle2.png" gap:platform="android" gap:density="hdpi" />  <!-- high dpi -->
+<icon src="./images/char/idle2.png" gap:platform="android" gap:density="xhdpi" />  <!-- extra high dpi -->
+<icon src="./images/char/idle2.png" gap:platform="ios"     width="57" height="57" />   
+<icon src="./images/char/idle2.png" gap:platform="ios"     width="72" height="72" />
+<icon src="./images/char/idle2.png" gap:platform="ios"     width="114" height="114" />
+<icon src="./images/char/idle2.png" gap:platform="ios"     width="144" height="144" />
+<icon src="./images/char/idle2.png" gap:platform="winphone" />
+<icon src="./images/char/idle2.png" gap:platform="winphone" gap:role="background" />
+<plugin name="nl.x-services.plugins.insomnia" spec="4.0.1" source="pgb" />
+<preference name="fullscreen"              value="true" />  
+</widget>
+

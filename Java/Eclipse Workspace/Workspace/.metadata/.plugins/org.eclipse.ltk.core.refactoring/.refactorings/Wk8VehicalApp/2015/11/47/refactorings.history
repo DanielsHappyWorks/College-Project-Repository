@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy 4 packages to &apos;ProgrammingCA2DanielFothPeterFitzmaurice/src&apos;&#x0D;&#x0A;- Original project: &apos;Wk8VehicalApp&apos;&#x0D;&#x0A;- Destination element: &apos;ProgrammingCA2DanielFothPeterFitzmaurice/src&apos;&#x0D;&#x0A;- Original elements:&#x0D;&#x0A;     Wk8VehicalApp/src/Controller&#x0D;&#x0A;     Wk8VehicalApp/src/Model&#x0D;&#x0A;     Wk8VehicalApp/src/View&#x0D;&#x0A;     Wk8VehicalApp/src/Utilities" description="Copy packages" destination="=ProgrammingCA2DanielFothPeterFitzmaurice/src" element1="/src&lt;Controller" element2="/src&lt;Model" element3="/src&lt;View" element4="/src&lt;Utilities" flags="589830" fragments="4" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyPackages" stamp="1448103849852" version="1.0"/>
+</session>

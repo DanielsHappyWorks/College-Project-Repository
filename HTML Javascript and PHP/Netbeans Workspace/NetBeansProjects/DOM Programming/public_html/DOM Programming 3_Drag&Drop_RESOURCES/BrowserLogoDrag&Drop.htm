@@ -1,0 +1,174 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<meta charset="UTF-8" />
+	
+		<title>
+			JavaScript Drag and Drop Example: based on Brueur
+		</title>
+	
+		<style type="text/css">
+			.drag {
+				border: 1px solid black; 
+				background-color: rgb(240, 240, 240); 
+				opacity: 0.2;
+				position: relative; 
+				padding: 0.5em; 
+				margin: 0 0 0.5em 1.5em; 
+				cursor: move; //puts crosshairs instead of mouse arrow
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="pageContainer">
+			<h1>
+				Modified from <a href="http://luke.breuer.com/tutorial/javascript-drag-and-drop-tutorial.aspx" target="_blank">Luke Breuer's Drag&Drop Tutorial Webpage</a>
+			</h1>
+			
+			<h3>
+				Try dragging one of the items below:
+			</h3>
+			
+			<hr />
+
+			<img class="drag" id="chrome-Logo" src="ChromeLogoSmall.jpg" alt="drag image" style="left: 10px; top: 0px;">
+			<img class="drag" id="internetExplorer-Logo" src="IELogoSmall.png" alt="drag image" style="left: 10px; top: 0px;">
+			<img class="drag" id="firefox-Logo" src="FirefoxLogoSmall.png" alt="drag image" style="left: 10px; top: 0px;">
+			<img class="drag" id="safari-Logo" src="SafariLogoSmall.jpg" alt="drag image" style="left: 10px; top: 0px;">
+			<img class="drag" id="opera-Logo" src="OperaLogoSmall.png" alt="drag image" style="left: 10px; top: 0px;">
+		
+			<pre id="debug">NON-draggable element clicked</pre>
+			
+			<h1>MODIFY THE CODE SO THAT WHEN YOU RIGHT-CLICK and DRAG a LOGO:</h1>
+			<ol>
+				<li>The logo gets continually and gradually bigger</li>
+				<li>The colour of the logo border changes <u>GRADUALLY</u>from RED to CYAN, then <u>ABRUPTLY</u> to RED, etc</li>
+				<li>The style of the border changes after the amount of red passes 200, 150, 100, 100</li>
+			</ol>
+			
+			<a href="http://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_event_target" target="_blank">Helpful example of e.target on W3schools</a>
+		</div>
+	
+		<script language="JavaScript" type="text/javascript">
+			// this is simply a shortcut for the eyes and fingers
+			function $(id) {
+				return document.getElementById(id);
+			}
+
+			var _startX = 0;			// mouse starting positions
+			var _startY = 0;
+			var _offsetX = 0;			// current element offset
+			var _offsetY = 0;
+			var _dragElement;			// needs to be passed from OnMouseDown to OnMouseMove
+			var _oldZIndex = 0;			// we temporarily increase the z-index during drag
+			var _debug = $('debug');	// makes life easier
+			var cornerDistance = 0;		// how far between logo and destination
+			var newZindex = 1000;
+                        var width=100;
+                        var height=100;
+
+			InitDragDrop();
+
+			function InitDragDrop() {
+				document.onmousedown = OnMouseDown;
+				document.onmouseup = OnMouseUp;
+			}
+
+			function OnMouseDown(e) {
+				var target = e.target;
+				
+				// this is the same code as the if statement below
+				_debug.innerHTML = target.className == 'drag' ? 'draggable element clicked' : 'NON-draggable element clicked';
+				
+				//if (target.className == 'drag') {
+				//	_debug.innerHTML = 'draggable element clicked';
+				//} else {
+				//	_debug.innerHTML = 'NON-draggable element clicked';
+				//}
+
+				if (target.className == 'drag') {
+					// grab the mouse position
+					_startX = e.clientX;
+					_startY = e.clientY;
+		
+					// grab the clicked element's position
+					_offsetX = parseInt(target.style.left);
+					_offsetY = parseInt(target.style.top);
+		
+					// bring the clicked element to the front while it is being dragged
+					_oldZIndex = target.style.zIndex;
+					//target.style.zIndex = 10000;
+					newZindex++;
+					target.style.zIndex = newZindex;
+					
+					target.style.opacity = 0.65; // make logo more opaque when it is being dragged
+                                        
+					// we need to access the element in OnMouseMove
+					_dragElement = target;
+
+					// tell our code to start moving the element with the mouse
+					document.onmousemove = OnMouseMove;
+		
+					// cancel out any text selections
+					document.body.focus();
+		
+					// prevent text selection in IE
+					document.onselectstart = function () { return false; };
+					// prevent IE from trying to drag an image
+					target.ondragstart = function() { return false; };
+				
+					// prevent text selection (except IE)
+					return false;
+				}
+			}
+
+			function OnMouseMove(e) {
+				if (e === null) { 
+					var e = window.event; 
+				}
+                                
+                                if (e.which === 1) { 
+				// this is the actual "drag code"
+				_dragElement.style.left = (_offsetX + e.clientX - _startX) + 'px';
+				_dragElement.style.top = (_offsetY + e.clientY - _startY) + 'px';
+	
+				_debug.innerHTML = '(' + _dragElement.id + ' ; ' + _dragElement.style.left + ', ' + _dragElement.style.top + ')';	
+			
+				}
+                                if (e.which === 3) { 
+				// this is the actual "drag code"
+                                width++;
+                                height++;
+				_dragElement.style.width = width + 'px';
+				_dragElement.style.height = height + 'px';
+	
+				_debug.innerHTML = 'The Width is '+width+'The height is '+height;	
+			
+				}
+				}
+
+			function OnMouseUp(e) {
+				if (_dragElement != null) {
+					//_dragElement.style.zIndex = _oldZIndex;
+
+					// we're done with these events until the next OnMouseDown
+					document.onmousemove = null;
+					document.onselectstart = null;
+					_dragElement.ondragstart = null;
+
+					_dragElement.style.opacity = 1; // make logo more opaque when it is being dragged
+					
+					//newZindex++;
+					//_dragElement.style.zIndex = newZindex;
+
+					
+					// this is how we know we're not dragging
+					_dragElement = null;
+	
+					_debug.innerHTML = 'mouse up';
+				}
+			}
+		</script>
+	</body>
+</html>

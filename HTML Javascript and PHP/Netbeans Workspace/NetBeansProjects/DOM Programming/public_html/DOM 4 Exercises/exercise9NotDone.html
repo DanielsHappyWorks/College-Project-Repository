@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            #p {
+                font-size: 1px;
+            }
+        </style>
+        
+        <script>
+            
+            var date1,date;
+            var size =  5;
+            var x = size;
+            
+            var increase = ((size*30)/3)/100;
+            var y = x/size;
+            
+            
+            function start(){
+                date = new Date();
+                change();
+            }
+            function change(){
+                //size in 3sec
+                //size in 1 sec
+                //size in 1/100 sec = 10 milisec
+                x += increase;
+
+                if(x/size<=30){
+                    
+                    setTimeout('changeSize()', 10);
+                    date1 = new Date();
+
+                }
+                else{
+                    x = size;                    
+                    console.log(((date1-date)/1000) + " Seconds");
+                    console.log(document.getElementById('p').style.fontSize);
+                }
+            }
+            function changeSize(){
+                document.getElementById('p').style.fontSize = parseInt(x) + 'px';
+                change();
+            }
+        </script>
+    </head>
+    <body onload="start()">
+        <p id="p" >QUESTION 9: Create a website so that the first p tag contents gets a 30-times bigger font-size in as close to 3 seconds as possible when the webpage loads.</p>
+    </body>
+</html>

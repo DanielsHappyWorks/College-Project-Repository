@@ -1,0 +1,108 @@
+//Select Statements
+Select distinct studio_name from anime join studio using(studio_id) where Anime_name like "Attack%";
+Select * from voice_Actors where Actor_name like "%yu%";
+select * from Anime join Studio using (Studio_id) where anime_name = "Nisekoi" and Studio_name = "Shaft"
+Select * from allanimewithratings where Anime_name = "No Game No Life";
+Select * from allanimewithstudio where Studio_name = "Studio Ghibli";
+Select * from user_watched_anime where User_id = 4 And User_rating > 6;
+Select * from fantasy_genre where Episode_count = 12;
+
+
+
+
+
+//Delete Statements
+delete from characters where actor_id = 23;
+delete from anime where Anime_name like "me%" and studio_id=5;
+delete from user_watched_anime where User_rating > 8.7500;
+delete from users where User_id =  1;
+
+
+
+
+
+//Update Statements
+update anime set studio_id ="1" where Anime_name = "attack on titan";
+update users  set User_password = "IloveSkeletons where user_id = 4; 
+update voice_actors set Actor_id = 69 where Actor_id = 19; 
+update characters set Character_description= "Loves Eren that’s it" where Character_name = "Mikasa Ackerman";
+update anime set Genre= "Comedy" where Anime_name = "Attack on Titan";
+update characters set Character_description= "Hurry up and get to the bloody basement" where Character_name = "Eren Yeager";
+UPDATE `animeorganiser`.`studio` SET `Studio_id` = '9' WHERE `studio`.`Studio_id` = 10;
+UPDATE `animeorganiser`.`user_watched_anime` SET `User_id` = '3', `Anime_id` = '13', `User_rating` = '7', `Anime_comments` = 'So so' WHERE `user_watched_anime`.`User_id` = 2 AND `user_watched_anime`.`Anime_id` = 7;
+
+
+
+
+//Insert Statements
+insert into voice_actors(Actor_id, Actor_name, Actor_dob) values(36, "Asakawa Yuu", 1975-3-20’);
+insert into studio(Studio_id,Studio_name, Studio_founding_year) values(10 , "TOHO Animation", 1932);
+INSERT INTO `animeorganiser`.`user_watched_anime` (`User_id`, `Anime_id`, `User_rating`, `completion_status`, `Anime_comments`) VALUES ('4', '12', '6', 'Completed', 'Good Animen lottsa dith');
+INSERT INTO `animeorganiser`.`anime` (`Anime_id`, `Studio_id`, `Anime_name`, `Anime_Description`, `Episode_count`, `Genre`, `Anime_release_date`, `Anime_completion_date`) VALUES (NULL, '9', 'Akame ga Kill', Leone ,’26', 'romance', '2015-12-09', '2015-12-26');
+
+
+
+
+
+//STATEMENTS FOR VIEWS
+SELECT * FROM `action_genre`
+SELECT * FROM `allanimewithcomments`
+SELECT * FROM `allanimewithratings`
+SELECT * FROM `allanimewithstudio`
+SELECT * FROM `comedy_genre`
+SELECT * FROM `drama_genre`
+SELECT * FROM `fantasy_genre`
+SELECT * FROM `game_genre`
+SELECT * FROM `mecha_genre`
+SELECT * FROM `psychological_genre`
+SELECT * FROM `romance_genre`
+SELECT * FROM `sol_genre`
+SELECT * FROM `supernatural_genre`
+SELECT * FROM `vampire_genre`
+
+
+
+
+//Procedure statements
+CALL `GetAllAnime`();
+CALL `GetAllAnimeByRating`(10);
+CALL `GetAllUsers`();
+CALL `GetUserComments`('peter');
+CALL SearchForAnimeByStudio ('Mad House');
+CALL CountCompletedStatusByUsers();
+
+//Transactions
+START TRANSACTION;
+insert into voice_actors(Actor_id, Actor_name, Actor_dob) values(138, "Yuu", 1975-3-20);
+SELECT * FROM voice_actors Where actor_id = 138;
+ROLLBACK;
+SELECT * FROM voice_actors Where actor_id = 138;
+COMMIT;
+
+START TRANSACTION;
+insert into voice_actors(Actor_id, Actor_name, Actor_dob) values(138, "Yuu", 1975-3-20);
+SELECT * FROM voice_actors Where actor_id = 138;
+COMMIT;
+SELECT * FROM voice_actors Where actor_id = 138;
+
+START TRANSACTION;
+CALL CountCompletedStatusByUsers();
+Delete From users Where User_name = 'Sean';
+SELECT * FROM users Where User_name = 'Sean';
+COMMIT;
+SELECT * FROM users Where User_name = 'Sean';
+
+START TRANSACTION;
+SELECT * FROM `allanimewithratings`;
+CALL `GetAllAnimeByRating`(10);
+delete from users where User_id =  1;
+Select * from fantasy_genre where Episode_count = 12;
+ROLLBACK;
+
+START TRANSACTION;
+SELECT * FROM `allanimewithcomments`
+CALL `GetUserComments`('peter');
+Select Anime_comments, User_id From user_watched_anime;
+Delete From user_watched_anime where User_id=3;
+COMMIT;
+Select Anime_comments, User_id From user_watched_anime;

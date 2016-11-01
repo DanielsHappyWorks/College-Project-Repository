@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Worked example from lecture notes</title>
+<style>
+#pathsCanvas
+{
+    border:1px solid black;
+    width:500px;
+    height:500px;
+}
+
+#loadingMessage
+{
+    position:absolute;
+    top:100px;
+    left:100px;
+    z-index:100;
+    font-size:50px;
+}
+</style>
+
+<script>
+var CANVAS_WIDTH = 500;
+var CANVAS_HEIGHT = 500;
+
+var canvas;
+var g;
+
+
+window.onload = onAllAssetsLoaded;
+document.write("<div id='loadingMessage'>Loading...</div>");
+function onAllAssetsLoaded()
+{
+    // hide the webpage loading message
+    document.getElementById('loadingMessage').style.visibility = "hidden";
+
+    canvas = document.getElementById("pathsCanvas");
+    g = canvas.getContext("2d");
+    canvas.width = CANVAS_WIDTH;
+    canvas.height = CANVAS_HEIGHT;
+
+    renderCanvas();
+}
+
+
+function renderCanvas()
+{
+    /* draw a square */
+    g.beginPath();
+    g.strokeStyle = "blue"; /* stroke colour */
+    g.moveTo(100, 100);
+    g.lineTo(200, 100);
+    g.lineTo(200, 200);
+    g.lineTo(100, 200);
+    g.lineTo(100, 100);
+    g.stroke();
+    g.closePath();
+
+    /* draw a triangle */
+    g.beginPath();
+    g.strokeStyle = "red"; /* stroke colour */
+    g.lineWidth = "10";
+    g.lineCap = "bevel";
+    g.moveTo(350, 100);
+    g.lineTo(400, 200);
+    g.lineTo(300, 200);
+    g.lineTo(350, 100);
+    g.lineTo(400, 200);
+    g.stroke();
+    g.closePath();
+
+    /* draw and fill a polygon */
+    g.beginPath();
+    g.lineWidth = "20";
+    g.setLineDash([50, 20]);
+    g.lineCap = "round";
+    g.lineJoin = "round";  /* Can also be miter (default) or bevel */
+    g.strokeStyle = "green"; /* stroke colour */
+    g.fillStyle = "yellow";
+    g.moveTo(100, 300);
+    g.lineTo(50, 400);
+    g.lineTo(200, 450);
+    g.lineTo(450, 400);
+    g.lineTo(200, 400);
+    g.lineTo(100, 300);
+    g.lineTo(50, 400);  /* Needed to clean up wide stroke for first polygon point */
+    g.fill();
+    g.stroke();
+    g.closePath();
+}
+</script>
+</head>
+
+<body>
+<canvas id = "pathsCanvas">
+Your browser does not support the HTML5 'Canvas' tag.
+</canvas>
+</body>
+</html> 

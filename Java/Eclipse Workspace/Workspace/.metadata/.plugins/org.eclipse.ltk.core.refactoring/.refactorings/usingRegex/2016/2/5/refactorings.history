@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename compilation unit &apos;usingRegex.regexUtility.java&apos; to &apos;RegexUtility.java&apos;&#x0D;&#x0A;- Original project: &apos;usingRegex&apos;&#x0D;&#x0A;- Original element: &apos;usingRegex.regexUtility.java&apos;&#x0D;&#x0A;- Renamed element: &apos;usingRegex.RegexUtility.java&apos;" description="Rename compilation unit &apos;regexUtility.java&apos;" flags="2" id="org.eclipse.jdt.ui.rename.compilationunit" input="/src&lt;usingRegex{regexUtility.java" name="RegexUtility.java" references="false" stamp="1454585211289" version="1.0"/>
+</session>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		
+		<meta name="viewport" content="width-device-width,initial-scale=1.0" />
+		
+		<title>
+			Reading From, and Writing To, A Simple Object
+		</title>
+		
+		<style type="text/css">
+			#mouseoverPara {
+				color: yellow;
+				background-color: red
+			}
+		</style>
+		
+		<script>
+			function createDisplayObject() {
+				// Creating a JavaScript OBJECT called fido:
+				var fido = {
+					name: "Fido",
+					weight: 24,
+					breed: "Mixed",
+					loves: ["walks", "fetching balls"]
+				}
+				
+				// displaying Fido data using object.property syntax (watch the +=):
+				document.getElementById("objectDetails").innerHTML += "Dog details: " + fido.name + " ; " + fido.weight + " ; " + fido.breed + " ; " + fido.loves;
+
+				// displaying Fido PROPERTIES in top table row using FOR...IN structure
+				// displaying Fido PROPERTY VALUES in bottom table row using FOR...IN structure
+
+				// 	(array needed to store the IDs of the relevant table cells (1st row)
+				// 	(array needed to store the IDs of the relevant table cells (2nd row)
+
+				//	(two counters needed: one (i) to cycle through the object PROPERTIES and object PROPERTY VALUES in the FOR...IN, and one (j) to access the appropriate ID value in the array
+				var topRow = ["c0", "c1", "c2", "c3"];
+				var bottomRow = ["data0", "data1", "data2", "data3"];
+				var j=0;
+				for (i in fido) {
+					document.getElementById(topRow[j]).innerHTML = i;
+					document.getElementById(bottomRow[j]).innerHTML = fido[i];
+					j++;
+				}		
+			}
+		</script>
+	</head>
+	
+	<body onload="createDisplayObject()">
+		<h1>
+			Creating and Displaying an Object
+		</h1>
+		
+		<h3 id="objectDetails">Object details will go here...</h3>
+		
+		<table border="5">
+			<tr>
+				<td id="c0"></td>
+				<td id="c1"></td>
+				<td id="c2"></td>
+				<td id="c3"></td>
+			</tr>
+			
+			<tr>
+				<td id="data0"></td>
+				<td id="data1"></td>
+				<td id="data2"></td>
+				<td id="data3"></td>
+			</tr>
+		</table>
+	</body>
+</html>
